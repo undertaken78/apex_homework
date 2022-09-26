@@ -1,8 +1,17 @@
 public with sharing class CommissionsPercentManager {
 
-    public static Commissions_Percent__c createCommissionsPercent(Decimal brokersPercent, Boolean serialize) {
+    public class CommissionsPercentWrapper {
+        public Id dealId {get; set;}
+        public Id contactId {get; set;}
+        public Id percent {get; set;}
+    }
+
+    public static Commissions_Percent__c createCommissionsPercent(CommissionsPercentWrapper wrapper, Boolean serialize) {
         Commissions_Percent__c commissionsPercent = new Commissions_Percent__c();
-        commissionsPercent.Brokers_Percent__c = brokersPercent;
+
+        commissionsPercent.Brokers_Percent__c = wrapper.percent;
+        commissionsPercent.Commission_Deal__c = wrapper.dealId;
+        commissionsPercent.Commission_Contact__c = wrapper.contactId;
 
         if(serialize) insert commissionsPercent;
 
