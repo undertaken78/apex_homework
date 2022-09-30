@@ -1,4 +1,4 @@
-public inherited sharing class DealManager {
+public with sharing class DealManager {
 
     public static final String DEFAULT_STATUS = 'Awaiting Approval';
 
@@ -7,6 +7,9 @@ public inherited sharing class DealManager {
         public Id seller {get; set;}
         public Id sellingProperty {get; set;}
         public String status {get; set;}
+        public Date rentStartDate {get; set;}
+        public Date rentEndDate {get; set;}
+        public Id recordTypeId {get; set;}
     }
 
     public static Deal__c createDeal(DealWrapper wrapper, Boolean serialize) {
@@ -15,6 +18,10 @@ public inherited sharing class DealManager {
         deal.Seller__c = wrapper.seller;
         deal.Selling_Property__c = wrapper.sellingProperty;
         deal.Status__c = String.isNotBlank(wrapper.status) ? wrapper.status : DEFAULT_STATUS;
+        if (deal.RecordType.Name == 'Lease') {
+            deal.Date_Start_Rent__c = wrapper.rentStartDate;
+            deal.Date_End_Rent__c = wrapper.rentEndDate;
+        }
 
         if (serialize) insert deal;
 
@@ -25,28 +32,26 @@ public inherited sharing class DealManager {
         return Database.query('SELECT ' + fields + ' FROM Deal__c WHERE Id IN :ids');
     }
 
-    public static List<Contact> getDealsByStatuses(List<String> statuses, String fields) {
+    public static List<Deal__c> getDealsByStatuses(List<String> statuses, String fields) {
         return Database.query('SELECT ' + fields + ' FROM Deal__c WHERE Status__c IN :statuses');
     }
 
-    public static List<Deal__c> updateDealsByIds(List<Id> ids, DealWrapper wrapper, Boolean serialize) {
-        List<Deal__c> dealsList = [SELECT Customer__c, Selling_Property__c, Status__c FROM Deal__c WHERE Id IN :ids];
-        List<Deal__c> updatedDealsList = new List<Deal__c>();
+    public static Deal__c updateDealsByIds(Id ids, DealWrapper wrapper, Boolean serialize) {
+        Deal__c mainDeal =
+            [SELECT Customer__c, Seller__c, Selling_Property__c, Status__c FROM Deal__c WHERE Id = :ids LIMIT 1];
 
-        for(Deal__c deal : dealsList) {
-            deal.Customer__c = wrapper.customer;
-            deal.Seller__c = wrapper.seller;
-            deal.Selling_Property__c = wrapper.sellingProperty;
-            deal.Status__c = String.isNotBlank(wrapper.status) ? wrapper.status : DEFAULT_STATUS;
-            updatedDealsList.add(deal);
-        }
+            mainDeal.Customer__c = wrapper.customer;
+            mainDeal.Seller__c = wrapper.seller;
+            mainDeal.Selling_Property__c = wrapper.sellingProperty;
+            mainDeal.Status__c = String.isNotBlank(wrapper.status) ? wrapper.status : DEFAULT_STATUS;
+            mainDeal.Date_Start_Rent__c = wrapper.rentStartDate;
+            mainDeal.Date_End_Rent__c = wrapper.rentEndDate;
+        if (serialize) update mainDeal;
 
-        if (serialize) update updatedDealsList;
-
-        return updatedDealsList;
+        return mainDeal;
     }
 
     public static void deleteDealsByStatus(List<String> statuses) {
-        delete [SElECT Id FROM Deal__c WHERE Status__c IN :statuses];
+        delete [SELECT Id FROM Deal__c WHERE Status__c IN :statuses];
     }
 }

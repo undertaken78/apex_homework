@@ -1,39 +1,31 @@
 public with sharing class CommissionsPercentManager {
-    public class CommissionsPercentWrapper {
-        public Id dealId {get; set;}
-        public Id contactId {get; set;}
-        public Id percent {get; set;}
-    }
 
-    public static Commissions_Percent__c createCommissionsPercent(CommissionsPercentWrapper wrapper, Boolean serialize) {
+    public static Commissions_Percent__c createCommissionsPercent(Decimal brokersPercent, Id contactId, Id dealId, Boolean serialize) {
         Commissions_Percent__c commissionsPercent = new Commissions_Percent__c();
-
-        commissionsPercent.Brokers_Percent__c = wrapper.percent;
-        commissionsPercent.Commission_Deal__c = wrapper.dealId;
-        commissionsPercent.Commission_Contact__c = wrapper.contactId;
+        commissionsPercent.Brokers_Percent__c = brokersPercent;
+        commissionsPercent.Commission_Contact__c = contactId;
+        commissionsPercent.Commission_Deal__c = dealId;
 
         if(serialize) insert commissionsPercent;
 
         return commissionsPercent;
     }
 
-    public static List<Commissions_Percent__c> getCommissionPercentByIds(List<Id> id, String fields) {
+    public static List<Commissions_Percent__c> getCommissionPercentsByIds(List<Id> ids, String fields) {
         return Database.query('SELECT ' + fields + ' FROM Commissions_Percent__c WHERE Id IN :ids');
     }
 
     public static List<Commissions_Percent__c> updateCommissionsPercents(List<Id> ids, Decimal percent, Boolean serialize) {
         List<Commissions_Percent__c> commissionsPercents =
                                     [SELECT Brokers_Percent__c FROM Commissions_Percent__c WHERE Id IN :ids];
-        List<Commissions_Percent__c> updatedCommissionsPercents = new List<Commissions_Percent__c>();
 
         for (Commissions_Percent__c commissionsPercent : commissionsPercents) {
             commissionsPercent.Brokers_Percent__c = percent;
-            updatedCommissionsPercents.add(commissionsPercent);
         }
 
-        if(serialize) update updatedCommissionsPercents;
+        if(serialize) update commissionsPercents;
 
-        return updatedCommissionsPercents;
+        return commissionsPercents;
     }
 
     public static void deleteCommissionPercentsByBrokersPercent(List<Decimal> percents) {

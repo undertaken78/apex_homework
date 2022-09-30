@@ -1,4 +1,4 @@
-public inherited sharing class ContactManager {
+public with sharing class ContactManager {
 
     public static final Id DEFAULT_RECORD_TYPE = Schema.SObjectType.Contact.getRecordTypeInfosByName()
             .get('Broker').getRecordTypeId();
@@ -10,13 +10,14 @@ public inherited sharing class ContactManager {
         public String phone {get; set;}
         public Date birthdate {get; set;}
         public String email {get; set;}
+
     }
 
     public static Contact createContact(ContactWrapper wrapper, Boolean serialize) {
         Contact contact = new Contact();
         contact.FirstName = wrapper.firstName;
-        contact.LastName = wrapper.LastName;
-        contact.RecordTypeId = String.isNotBlank(wrapper.recordTypeId) ? wrapper.recordTypeId : DEFAULT_RECORD_TYPE;
+        contact.LastName = wrapper.lastName;
+        contact.RecordTypeId = wrapper.recordTypeId;
         contact.Phone = wrapper.phone;
         contact.Birthdate = wrapper.birthdate;
         contact.Email = wrapper.email;
@@ -34,23 +35,20 @@ public inherited sharing class ContactManager {
         return Database.query('SELECT ' + fields + ' FROM Contact WHERE RecordTypeId IN :recordTypes');
     }
 
-    public static List<Contact> updateContactsByIds(List<Id> ids, ContactWrapper wrapper, Boolean serialize) {
-        List<Contact> contactsList = [SELECT Name, RecordTypeId, Phone, Birthdate, Email FROM Contact WHERE Id IN :ids];
-        List<Contact> updatedContactsList = new List<Contact>();
+    public static Contact updateContactsById(Id id, ContactWrapper wrapper, Boolean serialize) {
+        Contact contact = [SELECT FirstName, LastName, RecordTypeId, Phone, Birthdate, Email
+                           FROM Contact WHERE Id = :id LIMIT 1];
 
-        for (Contact contact : contactsList) {
-            contact.FirstName = wrapper.firstName;
-            contact.LastName = wrapper.lastName;
-            contact.RecordTypeId = String.isNotBlank(wrapper.recordTypeId) ? wrapper.recordTypeId : DEFAULT_RECORD_TYPE;
-            contact.Phone = wrapper.phone;
-            contact.Birthdate = wrapper.birthdate;
-            contact.Email = wrapper.email;
-            updatedContactsList.add(contact);
-        }
+        contact.FirstName = wrapper.firstName;
+        contact.LastName = wrapper.lastName;
+        contact.RecordTypeId = String.isNotBlank(wrapper.recordTypeId) ? wrapper.recordTypeId : DEFAULT_RECORD_TYPE;
+        contact.Phone = wrapper.phone;
+        contact.Birthdate = wrapper.birthdate;
+        contact.Email = wrapper.email;
 
-        if (serialize) update updatedContactsList;
+        if (serialize) update contact;
 
-        return updatedContactsList;
+        return contact;
     }
 
     public static void deleteContactsByRecordTypes(List<String> recordTypes) {

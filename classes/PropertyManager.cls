@@ -1,4 +1,4 @@
-public inherited sharing class PropertyManager {
+public with sharing class PropertyManager {
 
     public class PropertyWrapper {
         public String address {get; set;}
@@ -27,25 +27,20 @@ public inherited sharing class PropertyManager {
         return Database.query('SELECT ' + fields + ' FROM Property__c WHERE Sold_Price__c IN :soldPrices');
     }
 
-    public static List<Property__c> updateContactsByIds(List<Id> ids, PropertyWrapper wrapper, Boolean serialize) {
+    public static List<Property__c> updatePropertiesByIds(List<Id> ids, String address, Boolean serialize) {
         List<Property__c> propertiesList =
             [SELECT Address__c, Rent_Price__c, Sold_Price__c, Property_Owner__c FROM Property__c WHERE Id IN :ids];
-        List<Property__c> updatedPropertiesList = new List<Property__c>();
 
-        for (Property__c property : updatedPropertiesList) {
-            property.Address__c = wrapper.address;
-            property.Rent_Price__c = wrapper.rentPrice;
-            property.Sold_Price__c = wrapper.soldPrice;
-            property.Property_Owner__c = wrapper.propertyOwner;
-            updatedPropertiesList.add(property);
+        for (Property__c property : propertiesList) {
+            property.Address__c = address;
         }
 
-        if (serialize) update updatedPropertiesList;
+        if (serialize) update propertiesList;
 
-        return updatedPropertiesList;
+        return propertiesList;
     }
 
-    public static void deletePropertiesByPropertyOwners(List<Id> propertyOwners) {
-        delete [SELECT Id FROM Property__c WHERE Property_Owner__c IN :propertyOwners];
+    public static void deletePropertiesByAddress(List<String> addresses) {
+        delete [SELECT Id FROM Property__c WHERE Address__c IN :addresses];
     }
 }
