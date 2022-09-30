@@ -19,10 +19,11 @@ private class DealManager_Test {
                                                             Status__c = 'Awaiting Approval')};
         insert deals1;
 
-        List<Deal__c> deals2 = new List<Deal__c>{new Deal__c(Customer__c = contactCustomer.Id,
-                Seller__c = contactSeller.Id,
-                Selling_Property__c = property.Id,
-                Status__c = 'Open')};
+        List<Deal__c> deals2 = new List<Deal__c>{
+                new Deal__c(Customer__c = contactCustomer.Id,
+                            Seller__c = contactSeller.Id,
+                            Selling_Property__c = property.Id,
+                            Status__c = 'Open')};
         insert deals2;
     }
 

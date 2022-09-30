@@ -1,4 +1,4 @@
-public with sharing class LogManager {
+public inherited sharing class LogManager {
 
     public enum TypeLogs {NONE, INTERNAL, FINEST, FINER, FINE, DEBUG, INFO, WARN, ERROR}
 
