@@ -20,14 +20,10 @@ public class DealTriggerHandler extends TriggerHandler{
 
         List<Deal__c> dealsForUpdate = new List<Deal__c>();
 
-        for(Deal__c deal : dealList) {
-            for(Property__c prop : propertyList) {
-                if(prop.Id == deal.Selling_Property__c) {
-                    for(Deal__c d : prop.Deals1__r) {
-                        d.Status__c = 'Closed Lost';
-                        dealsForUpdate.add(d);
-                    }
-                }
+        for(Property__c prop : propertyList) {
+            for(Deal__c d : prop.Deals1__r) {
+                d.Status__c = 'Closed Lost';
+                dealsForUpdate.add(d);
             }
         }
 
