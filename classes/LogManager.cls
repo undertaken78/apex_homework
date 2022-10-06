@@ -1,4 +1,4 @@
-public with sharing class LogManager {
+public inherited sharing class LogManager {
 
     public enum TypeLogs {NONE, INTERNAL, FINEST, FINER, FINE, DEBUG, INFO, WARN, ERROR}
 
@@ -33,5 +33,15 @@ public with sharing class LogManager {
 
     public static void deleteLogsByTypes(List<String> types) {
         delete [SELECT Id FROM Log__c WHERE Type__c IN :types];
+    }
+
+    public static Log__c log(String errorSource, String Message, Boolean serialize) {
+        Log__c log = new Log__c();
+        log.Type__c = errorSource;
+        log.Message__c = Message;
+
+        if (serialize) insert log;
+
+        return log;
     }
 }
