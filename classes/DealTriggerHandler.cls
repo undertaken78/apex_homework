@@ -1,34 +1,25 @@
 public class DealTriggerHandler extends TriggerHandler{
-    private final Id SALE = Schema.SObjectType.Deal__c.getRecordTypeInfosByName()
-            .get('Sale').getRecordTypeId();
+
+    private List<Id> propertyIds = new List<Id>();
 
     public override void afterUpdate() {
-        List<Deal__c> dealList = [SELECT Id, Status__c, Selling_Property__c FROM Deal__c
-                                  WHERE Id IN :Trigger.new AND RecordTypeId = :SALE
-                                  AND Status__c = 'Closed Won'];
+        for(Id dealId : Trigger.newMap.keySet()) {
+            Deal__c newDeal = (Deal__c)Trigger.newMap.get(dealId);
 
-        List<Id> pIds = new List<Id>();
-        for(Deal__c d : dealList) {
-            pIds.add(d.Selling_Property__c);
-        }
+            if(newDeal.RecordTypeId != DealManager.SALE || newDeal.Status__c != 'Closed Won') continue;
 
-        List<Property__c> propertyList = [SELECT Id,
-                                         (SELECT Id, Status__c FROM Deals1__r
-                                          WHERE (Status__c = 'Open' OR Status__c = 'Awaiting Approval')
-                                          AND RecordTypeId = :SALE)
-                                          FROM Property__c WHERE Id IN :pIds];
-
-        List<Deal__c> dealsForUpdate = new List<Deal__c>();
-
-        for(Property__c prop : propertyList) {
-            for(Deal__c d : prop.Deals1__r) {
-                d.Status__c = 'Closed Lost';
-                dealsForUpdate.add(d);
+            if(newDeal.Status__c != Trigger.oldMap.get(dealId).get(Deal__c.Status__c)) {
+                propertyIds.add(newDeal.Selling_Property__c);
             }
         }
 
-        if (dealsForUpdate.size() > 0) {
-            update dealsForUpdate;
+        if(!propertyIds.isEmpty()) {
+            List<Deal__c> dealsToUpdate = DealManager.getNotClosedSaleDealsByProperties(propertyIds);
+            for(Deal__c deal : dealsToUpdate) {
+                deal.Status__c = 'Closed Lost';
+            }
+            Database.SaveResult[] results = Database.update(dealsToUpdate, false);
+            Utils.checkDatabaseSaveResults(results, dealsToUpdate, 'DealTriggerHandler');
         }
     }
 }

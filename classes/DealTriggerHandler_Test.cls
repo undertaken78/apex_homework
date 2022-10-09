@@ -1,21 +1,21 @@
 @IsTest
 private class DealTriggerHandler_Test {
     @IsTest static void testTriggerHandler() {
-        Contact firstContact = Utility.createContact('Pavel', 'Testovich');
-        Contact secondContact = Utility.createContact('Alexey', 'Test');
-        Contact thirdContact = Utility.createContact('Max', 'Testovoy');
+        Contact firstCustomer = TestDataFactory.createContact('Pavel', 'Testovich');
+        Contact secondCustomer = TestDataFactory.createContact('Alexey', 'Test');
+        Contact sellerContact = TestDataFactory.createContact('Max', 'Testovoy');
 
-        Property__c property = Utility.createProperty('ul. Testovaya', 9999,
-                                                   99, thirdContact);
+        Property__c property = TestDataFactory.createProperty('ul. Testovaya', 9999,
+                                                   99, sellerContact);
 
-        Deal__c firstDeal = Utility.createDeal(firstContact, thirdContact, property.Id);
-        Deal__c secondDeal = Utility.createDeal(secondContact, thirdContact, property.Id);
+        Deal__c firstDeal = TestDataFactory.createDeal(firstCustomer, sellerContact, property.Id);
+        Deal__c secondDeal = TestDataFactory.createDeal(secondCustomer, sellerContact, property.Id);
         firstDeal.Status__c = 'Closed Won';
 
         update firstDeal;
 
-        secondDeal.Status__c = [SELECT Status__c FROM Deal__c WHERE Status__c = 'Closed Lost'
-                                                                    AND Seller__c =:thirdContact.Id].Status__c;
-        System.assertEquals('Closed Lost', secondDeal.Status__c);
+        System.assertEquals('Closed Lost', [SELECT Status__c FROM Deal__c
+                                            WHERE Status__c = 'Closed Lost'
+                                            AND Selling_Property__c =: secondDeal.Selling_Property__c].Status__c);
     }
 }
