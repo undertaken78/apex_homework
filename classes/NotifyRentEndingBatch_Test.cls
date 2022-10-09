@@ -12,6 +12,7 @@ private class NotifyRentEndingBatch_Test {
         rent.Date_End_Rent__c = Datetime.now().addHours(3).addDays(1).date();
         insert rent;
     }
+    
 
     @IsTest static void testBatch() {
         Test.startTest();

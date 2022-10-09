@@ -8,3 +8,4 @@ public class NotifyRentEndingSchedule implements Schedulable{
         System.schedule(JOB_NAME + Date.today(), cron, new NotifyRentEndingSchedule());
     }
 }
+
