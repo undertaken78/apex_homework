@@ -5,7 +5,7 @@ public class EmailSender {
         for(Deal__c deal : deals) {
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.toAddresses = new String[] { deal.Customer__r.Email, deal.Selling_Property__r.Owner__r.Email__c };
-            System.debug('toAddresses ' + mail.toAddresses ); //I thing here you are getting blank list let check
+            System.debug('toAddresses ' + mail.toAddresses );
             if (!mail.toAddresses.isEmpty()) {
                 mail.setToAddresses(mail.toAddresses);
                 mail.setSubject('Rent ending');
