@@ -2,16 +2,16 @@
 private class CommissionsPercentManager_Test {
     @TestSetup
     static void setup() {
-        Contact contactCustomer = new Contact(LastName = 'Customer');
-        insert contactCustomer;
+        Contact contactCustomer = TestDataFactory.createContact('test', 'Customer');
 
-        Contact contactSeller = new Contact(LastName = 'Seller');
-        insert contactSeller;
+        Contact contactSeller = TestDataFactory.createContact('test','Seller');
 
-        Property__c property = new Property__c(Property_Owner__c = contactCustomer.Id,
-                Sold_Price__c = 10000, Rent_Price__c = 50,
-                Address__c = 'ul. Testovaya');
-        insert property;
+        PropertyManager.AddressWrapper wrapper = new PropertyManager.AddressWrapper('test','test','test');
+
+        LocationWrapper__c locationWrapper = TestDataFactory.createLocationWrapper(wrapper);
+
+        Property__c property = TestDataFactory.createProperty(9999,
+                99, contactCustomer, 'test', locationWrapper, wrapper);
 
         Deal__c deal =
                 new Deal__c(Customer__c = contactCustomer.Id,

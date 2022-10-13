@@ -8,10 +8,12 @@ private class DealManager_Test {
         Contact contactSeller = new Contact(LastName = 'Seller');
         insert contactSeller;
 
-        Property__c property = new Property__c(Property_Owner__c = contactCustomer.Id,
-                                               Sold_Price__c = 10000, Rent_Price__c = 50,
-                                                Address__c = 'ul. Testovaya');
-        insert property;
+        PropertyManager.AddressWrapper wrapper = new PropertyManager.AddressWrapper('test','test','test');
+
+        LocationWrapper__c locationWrapper = TestDataFactory.createLocationWrapper(wrapper);
+
+        Property__c property = TestDataFactory.createProperty(9999,
+                99, contactCustomer, 'test', locationWrapper, wrapper);
 
         List<Deal__c> deals1 = new List<Deal__c>{new Deal__c(Customer__c = contactCustomer.Id,
                                                             Seller__c = contactSeller.Id,
@@ -48,7 +50,7 @@ private class DealManager_Test {
         Id dealId = [SELECT Id FROM Deal__c WHERE Status__c = 'Awaiting Approval' LIMIT 1].Id;
         Deal__c createdList = [SELECT Status__c FROM Deal__c WHERE Status__c = 'Open' LIMIT 1];
         Deal__c updatedList = createdList;
-        updatedList = DealManager.updateDealsByIds(dealId, wrapper,false);
+        updatedList = DealManager.updateDealById(dealId, wrapper,false);
         System.assertNotEquals(updatedList, createdList);
     }
 
@@ -65,7 +67,7 @@ private class DealManager_Test {
         wrapper.recordTypeId = Schema.SObjectType.Deal__c.getRecordTypeInfosByName().get('Lease').getRecordTypeId();
         wrapper.rentStartDate = Date.today();
         wrapper.rentEndDate = Date.today().addMonths(6);
-        wrapper.sellingProperty = [SELECT Id FROM Property__c WHERE Address__c = 'ul. Testovaya' LIMIT 1].Id;
+        wrapper.sellingProperty = [SELECT Id FROM Property__c WHERE Address__c = 'test' LIMIT 1].Id;
         return wrapper;
     }
 }

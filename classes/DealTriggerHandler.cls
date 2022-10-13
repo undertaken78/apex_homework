@@ -6,7 +6,7 @@ public class DealTriggerHandler extends TriggerHandler{
         for(Id dealId : Trigger.newMap.keySet()) {
             Deal__c newDeal = (Deal__c)Trigger.newMap.get(dealId);
 
-            if(newDeal.RecordTypeId != DealManager.SALE || newDeal.Status__c != 'Closed Won') continue;
+            if(newDeal.RecordTypeId != DealManager.SALE_RECORDTYPE || newDeal.Status__c != 'Closed Won') continue;
 
             if(newDeal.Status__c != Trigger.oldMap.get(dealId).get(Deal__c.Status__c)) {
                 propertyIds.add(newDeal.Selling_Property__c);

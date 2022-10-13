@@ -5,8 +5,12 @@ private class DealTriggerHandler_Test {
         Contact secondCustomer = TestDataFactory.createContact('Alexey', 'Test');
         Contact sellerContact = TestDataFactory.createContact('Max', 'Testovoy');
 
-        Property__c property = TestDataFactory.createProperty('ul. Testovaya', 9999,
-                                                   99, sellerContact);
+        PropertyManager.AddressWrapper wrapper = new PropertyManager.AddressWrapper('test', 'test', 'test');
+
+        LocationWrapper__c locationWrapper = TestDataFactory.createLocationWrapper(wrapper);
+
+        Property__c property = TestDataFactory.createProperty(9999,
+                                                   99, sellerContact, 'test', locationWrapper, wrapper);
 
         Deal__c firstDeal = TestDataFactory.createDeal(firstCustomer, sellerContact, property.Id);
         Deal__c secondDeal = TestDataFactory.createDeal(secondCustomer, sellerContact, property.Id);

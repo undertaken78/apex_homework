@@ -1,18 +1,40 @@
 public with sharing class PropertyManager {
 
     public class PropertyWrapper {
-        public String address {get; set;}
+        public Id id {get; set;}
+        public AddressWrapper addressWrapper {get; set;}
+        public String latitude {get; set;}
+        public String longitude {get; set;}
         public Decimal rentPrice {get; set;}
         public Decimal soldPrice {get; set;}
         public Id propertyOwner {get; set;}
     }
 
-    public static Property__c createProperty(PropertyWrapper wrapper, Boolean serialize) {
+    public class AddressWrapper {
+        public String country {get; set;}
+        public String city {get; set;}
+        public String address{get; set;}
+
+        public AddressWrapper(){}
+
+        public AddressWrapper(String country, String city, String address) {
+            this.country = country;
+            this.city = city;
+            this.address = address;
+        }
+    }
+
+    public static Property__c createProperty(PropertyWrapper wrapper, LocationWrapper__c locationWrapper, Boolean serialize) {
         Property__c property = new Property__c();
-        property.Address__c = wrapper.address;
+        property.Address__c = locationWrapper.Address__c;
+        property.City__c = locationWrapper.City__c;
+        property.Country__c = locationWrapper.Country__c;
+        property.Location__c = locationWrapper.Id;
         property.Rent_Price__c = wrapper.rentPrice;
         property.Sold_Price__c = wrapper.soldPrice;
         property.Property_Owner__c = wrapper.propertyOwner;
+        property.Latitude__c = (String.isBlank(wrapper.latitude)) ? property.Latitude__c : '' ;
+        property.Longitude__c = (String.isBlank(wrapper.longitude)) ? property.Longitude__c : '' ;
 
         if(serialize) insert property;
 

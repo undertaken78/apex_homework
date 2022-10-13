@@ -2,14 +2,20 @@ public with sharing class DealManager {
 
     public static final String DEFAULT_STATUS = 'Awaiting Approval';
 
+    public static final Id SALE_RECORDTYPE = Schema.SObjectType.Deal__c.getRecordTypeInfosByName()
+            .get('Sale').getRecordTypeId();
+
+    public static final Id LEASE_RECORDTYPE = Schema.SObjectType.Deal__c.getRecordTypeInfosByName()
+            .get('Lease').getRecordTypeId();
+
     public class DealWrapper {
-        public Id customer {get; set;}
-        public Id seller {get; set;}
-        public Id sellingProperty {get; set;}
-        public String status {get; set;}
-        public Date rentStartDate {get; set;}
-        public Date rentEndDate {get; set;}
-        public Id recordTypeId {get; set;}
+        public Id customer { get; set; }
+        public Id seller { get; set; }
+        public Id sellingProperty { get; set; }
+        public String status { get; set; }
+        public Date rentStartDate { get; set; }
+        public Date rentEndDate { get; set; }
+        public Id recordTypeId { get; set; }
     }
 
     public static Deal__c createDeal(DealWrapper wrapper, Boolean serialize) {
@@ -36,16 +42,15 @@ public with sharing class DealManager {
         return Database.query('SELECT ' + fields + ' FROM Deal__c WHERE Status__c IN :statuses');
     }
 
-    public static Deal__c updateDealsByIds(Id ids, DealWrapper wrapper, Boolean serialize) {
-        Deal__c mainDeal =
-            [SELECT Customer__c, Seller__c, Selling_Property__c, Status__c FROM Deal__c WHERE Id = :ids LIMIT 1];
+    public static Deal__c updateDealById(Id ids, DealWrapper wrapper, Boolean serialize) {
+        Deal__c mainDeal = [SELECT Customer__c, Seller__c, Selling_Property__c, Status__c FROM Deal__c WHERE Id = :ids LIMIT 1];
 
-            mainDeal.Customer__c = wrapper.customer;
-            mainDeal.Seller__c = wrapper.seller;
-            mainDeal.Selling_Property__c = wrapper.sellingProperty;
-            mainDeal.Status__c = String.isNotBlank(wrapper.status) ? wrapper.status : DEFAULT_STATUS;
-            mainDeal.Date_Start_Rent__c = wrapper.rentStartDate;
-            mainDeal.Date_End_Rent__c = wrapper.rentEndDate;
+        mainDeal.Customer__c = wrapper.customer;
+        mainDeal.Seller__c = wrapper.seller;
+        mainDeal.Selling_Property__c = wrapper.sellingProperty;
+        mainDeal.Status__c = wrapper.status;
+        mainDeal.Date_Start_Rent__c = wrapper.rentStartDate;
+        mainDeal.Date_End_Rent__c = wrapper.rentEndDate;
         if (serialize) update mainDeal;
 
         return mainDeal;
@@ -53,5 +58,16 @@ public with sharing class DealManager {
 
     public static void deleteDealsByStatus(List<String> statuses) {
         delete [SELECT Id FROM Deal__c WHERE Status__c IN :statuses];
+    }
+
+    public static List<Deal__c> getNotClosedSaleDealsByProperties(List<Id> propertyIds) {
+        return [
+                SELECT Id
+                FROM Deal__c
+                WHERE Selling_Property__c IN :propertyIds
+                AND Status__c NOT IN ('Closed Won', 'Closed', 'Closed Lost')
+                AND RecordTypeId = :SALE_RECORDTYPE
+        ];
+
     }
 }

@@ -2,29 +2,28 @@
 private class PropertyManager_Test {
     @TestSetup
     static void setup() {
-        Contact firstContact = new Contact(LastName = 'pablo');
-        insert firstContact;
+        Contact firstContact = TestDataFactory.createContact('eskobar','pablo');
 
-        Contact secondContact = new Contact(LastName = 'pavlo');
-        insert secondContact;
+        Contact secondContact = TestDataFactory.createContact('test','pavlo');
 
-        Property__c firstProperty = new Property__c(Address__c= 'ul. Pushkina',
-                                                  Rent_Price__c = 10,
-                                                  Sold_Price__c = 1000,
-                                                  Property_Owner__c = firstContact.Id);
-        insert firstProperty;
+        PropertyManager.AddressWrapper wrapper = new PropertyManager.AddressWrapper('test','test','test');
 
-        Property__c secondProperty = new Property__c(Address__c= 'test',
-                Rent_Price__c = 5,
-                Sold_Price__c = 500,
-                Property_Owner__c = secondContact.Id);
-        insert secondProperty;
+        LocationWrapper__c locationWrapper = TestDataFactory.createLocationWrapper(wrapper);
+
+        TestDataFactory.createProperty(9999, 99, firstContact, 'test', locationWrapper, wrapper);
+
+        TestDataFactory.createProperty(9999, 9, secondContact, 'test', locationWrapper, wrapper);
     }
 
-    @IsTest static void testCreateContactById() {
+    @IsTest static void testCreateProperty() {
         PropertyManager.PropertyWrapper wrapper = getWrapper();
+        LocationWrapper__c locationWrapper = new LocationWrapper__c();
+        locationWrapper.Country__c = 'test';
+        locationWrapper.City__c = 'test';
+        locationWrapper.Address__c = 'test';
+        insert locationWrapper;
 
-        Property__c property = PropertyManager.createProperty(wrapper,false);
+        Property__c property = PropertyManager.createProperty(wrapper, locationWrapper,false);
 
         Test.startTest();
         Database.SaveResult result = Database.insert(property);
@@ -32,14 +31,14 @@ private class PropertyManager_Test {
         System.assert(result.isSuccess());
     }
 
-    @isTest static void testGetPropertiesByIds() {
-        Id propertyId = [SELECT Id FROM Property__c WHERE Address__c = 'ul. Pushkina'].Id;
+    @IsTest static void testGetPropertiesByIds() {
+        Id propertyId = [SELECT Id FROM Property__c WHERE Address__c = 'test' LIMIT 1].Id;
         List<Property__c> properties = PropertyManager.getPropertiesByIds(new List<String>{propertyId}, 'Address__c');
         System.assertEquals(1, properties.size());
     }
 
-    @isTest static void testGetPropertiesBySoldPrices() {
-        Decimal propertyPrice = [SELECT Sold_Price__c FROM Property__c WHERE Address__c = 'ul. Pushkina'].Sold_Price__c;
+    @IsTest static void testGetPropertiesBySoldPrices() {
+        Decimal propertyPrice = [SELECT Sold_Price__c FROM Property__c WHERE Address__c = 'test' LIMIT 1].Sold_Price__c;
         List<Property__c> properties = PropertyManager.getPropertiesBySoldPrices
                                                             (new List<Decimal>{propertyPrice}, 'Address__c');
         System.assertEquals(1, properties.size());
@@ -48,10 +47,10 @@ private class PropertyManager_Test {
     @IsTest static void testUpdatePropertiesByIds() {
         PropertyManager.PropertyWrapper wrapper = getWrapper();
 
-        Id propertyId = [SELECT Id FROM Property__c WHERE Address__c = 'ul. Pushkina' LIMIT 1].Id;
+        Id propertyId = [SELECT Id FROM Property__c WHERE Address__c = 'test' LIMIT 1].Id;
 
         List<Property__c> createdProperty =
-                new List<Property__c>{[SELECT Address__c FROM Property__c WHERE Address__c = 'ul. Pushkina' LIMIT 1]};
+                new List<Property__c>{[SELECT Address__c FROM Property__c WHERE Address__c = 'test' LIMIT 1]};
 
         List<Property__c> updatedProperty = createdProperty;
 
@@ -61,18 +60,19 @@ private class PropertyManager_Test {
         System.assertNotEquals(updatedProperty, createdProperty);
     }
 
-    @isTest static void testDelete() {
-        PropertyManager.deletePropertiesByAddress(new List<String>{'ul. Pushkina'});
+    @IsTest static void testDelete() {
+        PropertyManager.deletePropertiesByAddress(new List<String>{'test'});
         System.assertEquals(new List<Property__c>(),
-                [SELECT Address__c FROM Property__c WHERE Address__c =:new List<String>{'ul. Pushkina'}]);
+                [SELECT Address__c FROM Property__c WHERE Address__c =:new List<String>{'test'}]);
     }
 
     private static PropertyManager.PropertyWrapper getWrapper() {
-        PropertyManager.PropertyWrapper wrapper = new PropertyManager.PropertyWrapper();
+
         Contact contact = new Contact(LastName = 'Alex');
         insert contact;
+
+        PropertyManager.PropertyWrapper wrapper = new PropertyManager.PropertyWrapper();
         wrapper.propertyOwner = contact.Id;
-        wrapper.address = 'ul. Himikov';
         wrapper.rentPrice = 99;
         wrapper.soldPrice = 9910;
         return wrapper;
