@@ -2,12 +2,30 @@ public with sharing class PropertyManager {
 
     public class PropertyWrapper {
         public Id id {get; set;}
-        public AddressWrapper addressWrapper {get; set;}
         public String latitude {get; set;}
         public String longitude {get; set;}
+        public String country {get; set;}
+        public String city {get; set;}
+        public String address{get; set;}
         public Decimal rentPrice {get; set;}
         public Decimal soldPrice {get; set;}
         public Id propertyOwner {get; set;}
+        public Id owner {get; set;}
+
+        public PropertyWrapper(){}
+
+        public PropertyWrapper(Property__c property) {
+            this.id = property.Id;
+            this.latitude = property.Latitude__c;
+            this.longitude = property.Longitude__c;
+            this.rentPrice = property.Rent_Price__c;
+            this.soldPrice = property.Sold_Price__c;
+            this.propertyOwner = property.Property_Owner__c;
+            //this.owner = property.Owner__c;
+            this.city = property.City__c;
+            this.country = property.Country__c;
+            this.address = property.Address__c;
+        }
     }
 
     public class AddressWrapper {
@@ -47,6 +65,10 @@ public with sharing class PropertyManager {
 
     public static List<Property__c> getPropertiesBySoldPrices(List<Decimal> soldPrices, String fields) {
         return Database.query('SELECT ' + fields + ' FROM Property__c WHERE Sold_Price__c IN :soldPrices');
+    }
+
+    public static List<Property__c> getPropertiesByOwners(List<Id> owners, String fields) {
+        return Database.query('SELECT ' + fields + ' FROM Property__c WHERE Property_Owner__c IN :owners');
     }
 
     public static List<Property__c> updatePropertiesByIds(List<Id> ids, String address, Boolean serialize) {
