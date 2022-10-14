@@ -39,21 +39,23 @@ global class PropertyRESTService {
                         'Country__c, Rent_Price__c, Sold_Price__c, Longitude__c, Latitude__c';
 
         Id ownerID;
-        Contact owner;
+        Contact ownerContact;
 
         if(wrapper.propertyId instanceof Id ) {
-            ownerID = [SELECT Owner__c FROM Property__c WHERE Id = :wrapper.propertyId].Owner__c;
-            owner = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE Id = :ownerID LIMIT 1];
+            System.debug(wrapper.propertyId);
+            ownerID = [SELECT Property_Owner__c FROM Property__c WHERE Property_Owner__c = :wrapper.propertyId].Property_Owner__c;
+            System.debug(ownerID);
+            ownerContact = [SELECT Id, FirstName, LastName, Email FROM Contact WHERE Id = :ownerID LIMIT 1];
 
-            owner.Id = String.isNotEmpty(wrapper.ownerClient.sfId) ? wrapper.ownerClient.sfId : '';
-            owner.FirstName = String.isNotEmpty(wrapper.ownerClient.firstName) ? wrapper.ownerClient.firstName : '';
-            owner.LastName = String.isNotEmpty(wrapper.ownerClient.lastName) ? wrapper.ownerClient.lastName : '';
-            owner.Email = wrapper.ownerClient.email;
+            ownerContact.Id = String.isNotEmpty(wrapper.ownerClient.sfId) ? wrapper.ownerClient.sfId : ownerContact.Id;
+            ownerContact.FirstName = String.isNotEmpty(wrapper.ownerClient.firstName) ? wrapper.ownerClient.firstName : '';
+            ownerContact.LastName = String.isNotEmpty(wrapper.ownerClient.lastName) ? wrapper.ownerClient.lastName : '';
+            ownerContact.Email = wrapper.ownerClient.email;
         }
 
-        PropertyManager.PropertyWrapper propWrapper = new PropertyManager.PropertyWrapper(PropertyManager.getPropertiesByIds(new List<Id>{wrapper.propertyId},fields).get(0));
+        PropertyManager.PropertyWrapper propWrapper = new PropertyManager.PropertyWrapper(PropertyManager.getPropertiesByOwners(new List<Id>{wrapper.propertyId},fields).get(0));
 
-        upsert owner;
+        upsert ownerContact;
         return JSON.serialize(propWrapper);
     }
 

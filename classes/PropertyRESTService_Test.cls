@@ -12,6 +12,10 @@ private class PropertyRESTService_Test {
         Contact contactOwner1 = TestDataFactory.createContact('testFirstName1','testLastName1','test1@gmail.com');
         Contact contactOwner2 = TestDataFactory.createContact('testFirstName2','testLastName2','test2@gmail.com');
 
+        Client__c client = new Client__c(Sfid__c = contactOwner2.Id, FirstName__c = contactOwner2.FirstName,
+                                         LastName__c = contactOwner2.LastName, Email__c = contactOwner2.Email);
+        insert client;
+
         PropertyManager.PropertyWrapper propertyWrapper1 = new PropertyManager.PropertyWrapper();
         propertyWrapper1.address = 'testAddress1';
         propertyWrapper1.city = 'testCity1';
@@ -22,6 +26,7 @@ private class PropertyRESTService_Test {
         propertyWrapper1.rentPrice = 10;
         propertyWrapper1.longitude = 'testLongitude1';
         propertyWrapper1.latitude = 'testLatitude1';
+
         Property__c property1 = TestDataFactory.createProperty(propertyWrapper1, true);
 
         PropertyManager.PropertyWrapper propertyWrapper2 = new PropertyManager.PropertyWrapper();
@@ -50,7 +55,7 @@ private class PropertyRESTService_Test {
     }
 
     @IsTest static void getPropertyByOwnerTest() {
-        Contact contactOwner = [SELECT Id FROM Contact WHERE Email = 'test1@gmail.com' LIMIT 1];
+        Contact contactOwner = [SELECT Id FROM Contact WHERE Email = 'test2@gmail.com' LIMIT 1];
         RestRequest request = new RestRequest();
         request.requestURI = 'https://senla-dev-ed.my.salesforce.com/services/data/v55.0/sobjects/propery/v1/by_owner?owner=' + contactOwner.Id;
         request.httpMethod = 'GET';
@@ -76,7 +81,7 @@ private class PropertyRESTService_Test {
 
     @IsTest static void createPropertyTest() {
         Property__c property = [SELECT Id, Sold_Price__c, Country__c, City__c, Rent_Price__c,
-                                       Address__c, Property_Owner__c, Longitude__c, Latitude__c
+                                       Address__c, Property_Owner__c, Longitude__c, Latitude__c, Owner__c
                                 FROM Property__c WHERE Sold_Price__c = 1000 LIMIT 1];
         PropertyManager.PropertyWrapper wrapper = new PropertyManager.PropertyWrapper(property);
 
@@ -92,25 +97,25 @@ private class PropertyRESTService_Test {
     }
 
     // ДОРАБОТАТЬ
-    @isTest static void updatePropertyOwnerTest() {
-        Property__c prop = [SELECT Id FROM Property__c WHERE City__c = 'testCity1' LIMIT 1];
+    @IsTest static void updatePropertyOwnerTest() {
+        Property__c prop = [SELECT Id, Property_Owner__c FROM Property__c LIMIT 1];
 
-        SerializationWrapper.PropertyOwnerWrapper wrap = new SerializationWrapper.PropertyOwnerWrapper();
-        wrap.propertyId = prop.Id;
-        wrap.ownerClient = new SerializationWrapper.ClientWrapper();
-        wrap.ownerClient.firstName = 'test25';
-        wrap.ownerClient.lastName = 'test52';
-        wrap.ownerClient.email = 'test25@gmail.ru';
+        SerializationWrapper.PropertyOwnerWrapper wrapper = new SerializationWrapper.PropertyOwnerWrapper();
+        wrapper.propertyId = prop.Property_Owner__c;
+        wrapper.ownerClient = new SerializationWrapper.ClientWrapper();
+        wrapper.ownerClient.firstName = 'test25';
+        wrapper.ownerClient.lastName = 'test52';
+        wrapper.ownerClient.email = 'test25@gmail.ru';
 
         RestRequest request = new RestRequest();
-        request.requestUri = 'https://senla62-dev-ed.my.salesforce.com/services/data/v55.0/sobjects/propery/v1';
+        request.requestURI = 'https://senla-dev-ed.my.salesforce.com/services/data/v55.0/sobjects/propery/v1';
         request.httpMethod = 'PUT';
-        request.requestBody = Blob.valueOf(JSON.serialize(wrap));
+        request.requestBody = Blob.valueOf(JSON.serialize(wrapper));
         RestContext.request = request;
 
         String result = PropertyRESTService.updatePropertyOwner();
 
         System.assert(result != null);
-        System.assert([SELECT Owner__r.Email__c FROM Property__c WHERE Owner__r.Email__c = 'newEmail@mail.ru'].Owner__r.Email__c == 'test25@gmail.ru');
+        System.assert([SELECT Property_Owner__r.Email FROM Property__c WHERE Property_Owner__r.Email = 'test25@gmail.ru'].Property_Owner__r.Email == 'test25@gmail.ru');
     }
 }
