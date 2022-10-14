@@ -16,6 +16,18 @@ public with sharing class DealManager {
         public Date rentStartDate { get; set; }
         public Date rentEndDate { get; set; }
         public Id recordTypeId { get; set; }
+
+        public DealWrapper(){}
+
+        public DealWrapper(Deal__c deal) {
+            this.customer = deal.Customer__c;
+            this.seller = deal.Seller__c;
+            this.sellingProperty = deal.Selling_Property__c;
+            this.status = deal.Status__c;
+            this.rentStartDate = deal.Date_Start_Rent__c;
+            this.rentEndDate = deal.Date_End_Rent__c;
+            this.recordTypeId = deal.RecordTypeId;
+        }
     }
 
     public static Deal__c createDeal(DealWrapper wrapper, Boolean serialize) {
@@ -40,6 +52,18 @@ public with sharing class DealManager {
 
     public static List<Deal__c> getDealsByStatuses(List<String> statuses, String fields) {
         return Database.query('SELECT ' + fields + ' FROM Deal__c WHERE Status__c IN :statuses');
+    }
+
+    public static List<Deal__c> getDealsByDateAndRecordType(String propertyId, String fields, String recordTypeName,
+            Date startLease, Date endLease) {
+
+        Id recordTypeId = Schema.SObjectType.Deal__c.getRecordTypeInfosByName()
+                .get(recordTypeName).getRecordTypeId();
+
+        return Database.query('SELECT ' + fields +
+                              ' FROM Deal__c WHERE RecordTypeId =: recordTypeId ' +
+                              'AND Date_Start_Rent__c =:startLease AND Date_End_Rent__c =:endLease' +
+                              ' AND Selling_Property__c =: propertyId');
     }
 
     public static Deal__c updateDealById(Id ids, DealWrapper wrapper, Boolean serialize) {

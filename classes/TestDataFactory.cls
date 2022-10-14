@@ -94,11 +94,29 @@ public with sharing class TestDataFactory {
         return property;
     }
 
+    public static Property__c createProperty(PropertyManager.PropertyWrapper wrapper, Boolean serialize) {
+        Property__c property = new Property__c();
+        property.Address__c = wrapper.address;
+        property.City__c = wrapper.city;
+        property.Country__c = wrapper.country;
+        property.Rent_Price__c = wrapper.rentPrice;
+        property.Sold_Price__c = wrapper.soldPrice;
+        property.Property_Owner__c = wrapper.propertyOwner;
+        property.Owner__c = wrapper.owner;
+        property.Latitude__c = (String.isBlank(wrapper.latitude)) ? property.Latitude__c : '' ;
+        property.Longitude__c = (String.isBlank(wrapper.longitude)) ? property.Longitude__c : '' ;
+
+        if(serialize) insert property;
+
+        return property;
+    }
+
     public static LocationWrapper__c createLocationWrapper(PropertyManager.AddressWrapper wrapper) {
         LocationWrapper__c location = new LocationWrapper__c();
         location.Country__c = wrapper.country;
         location.City__c = wrapper.city;
         location.Address__c = wrapper.address;
+
         insert location;
         return location;
     }
@@ -107,6 +125,7 @@ public with sharing class TestDataFactory {
         Contact contact = new Contact(FirstName = firstName, LastName = lastName);
         contact.RecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByName()
                 .get('Broker').getRecordTypeId();
+
         insert contact;
         return contact;
     }
@@ -115,14 +134,38 @@ public with sharing class TestDataFactory {
         Contact contact = new Contact(FirstName = firstName, LastName = lastName, Email = email);
         contact.RecordTypeId = Schema.SObjectType.Contact.getRecordTypeInfosByName()
                 .get('Broker').getRecordTypeId();
+
         insert contact;
         return contact;
     }
 
-    public static Deal__c createDeal(Contact customer,Contact seller,Id sellingProp) {
+    public static Deal__c createDeal(Contact customer, Contact seller, Id sellingProp) {
         Deal__c deal = new Deal__c(Customer__c = customer.Id, Seller__c = seller.Id,
                 Selling_Property__c = sellingProp, Status__c = 'Open',
                 RecordTypeId = DEFAULT_DEAL_TYPE);
+
+        insert deal;
+        return deal;
+    }
+
+    public static Deal__c createDeal(Contact customer, Contact seller, Id sellingProp,
+            Id recordTypeId, Date startLease, Date endLease) {
+
+        Deal__c deal = new Deal__c(Customer__c = customer.Id, Seller__c = seller.Id,
+                Selling_Property__c = sellingProp, Status__c = 'Open',
+                RecordTypeId = recordTypeId, Date_Start_Rent__c = startLease, Date_End_Rent__c = endLease);
+
+        insert deal;
+        return deal;
+    }
+
+    public static Deal__c createDeal(Contact customer, Contact seller, Id sellingProp,
+            Id recordTypeId) {
+
+        Deal__c deal = new Deal__c(Customer__c = customer.Id, Seller__c = seller.Id,
+                Selling_Property__c = sellingProp, Status__c = 'Open',
+                RecordTypeId = recordTypeId);
+
         insert deal;
         return deal;
     }
