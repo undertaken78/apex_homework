@@ -12,10 +12,6 @@ private class PropertyRESTService_Test {
         Contact contactOwner1 = TestDataFactory.createContact('testFirstName1','testLastName1','test1@gmail.com');
         Contact contactOwner2 = TestDataFactory.createContact('testFirstName2','testLastName2','test2@gmail.com');
 
-        Client__c client = new Client__c(Sfid__c = contactOwner2.Id, FirstName__c = contactOwner2.FirstName,
-                                         LastName__c = contactOwner2.LastName, Email__c = contactOwner2.Email);
-        insert client;
-
         PropertyManager.PropertyWrapper propertyWrapper1 = new PropertyManager.PropertyWrapper();
         propertyWrapper1.address = 'testAddress1';
         propertyWrapper1.city = 'testCity1';
@@ -29,33 +25,12 @@ private class PropertyRESTService_Test {
 
         Property__c property1 = TestDataFactory.createProperty(propertyWrapper1, true);
 
-        PropertyManager.PropertyWrapper propertyWrapper2 = new PropertyManager.PropertyWrapper();
-        propertyWrapper2.address = 'testAddress2';
-        propertyWrapper2.city = 'testCity2';
-        propertyWrapper2.country = 'testCountry2';
-        propertyWrapper2.propertyOwner = contactOwner2.Id;
-        //propertyWrapper2.owner = contactOwner1.Id;
-        propertyWrapper2.soldPrice = 9999;
-        propertyWrapper2.rentPrice = 99;
-        propertyWrapper2.longitude = 'testLongitude2';
-        propertyWrapper2.latitude = 'testLatitude2';
-        Property__c property2 = TestDataFactory.createProperty(propertyWrapper2, true);
-
         Deal__c dealLease1 = TestDataFactory.createDeal(contactOwner1, contactOwner2, property1.Id,
                 LEASE_RECORDTYPE, Date.valueOf('2022-10-14'), Date.valueOf('2022-10-20'));
-
-        Deal__c dealLease2 = TestDataFactory.createDeal(contactOwner1, contactOwner2, property2.Id,
-                LEASE_RECORDTYPE, Date.valueOf('2022-9-14'), Date.valueOf('2022-9-20'));
-
-        Deal__c dealSale1 = TestDataFactory.createDeal(contactOwner1, contactOwner2, property2.Id,
-                SALE_RECORDTYPE);
-
-        Deal__c dealSale2 = TestDataFactory.createDeal(contactOwner1, contactOwner2, property2.Id,
-                SALE_RECORDTYPE);
     }
 
     @IsTest static void getPropertyByOwnerTest() {
-        Contact contactOwner = [SELECT Id FROM Contact WHERE Email = 'test2@gmail.com' LIMIT 1];
+        Contact contactOwner = [SELECT Id FROM Contact WHERE Email = 'test1@gmail.com' LIMIT 1];
         RestRequest request = new RestRequest();
         request.requestURI = 'https://senla-dev-ed.my.salesforce.com/services/data/v55.0/sobjects/propery/v1/by_owner?owner=' + contactOwner.Id;
         request.httpMethod = 'GET';
