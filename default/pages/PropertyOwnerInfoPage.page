@@ -39,6 +39,7 @@
              	margin: 30px 0;
             }
         </style>
+        <apex:slds>
     </head>
     <body>
         <div class="title">
