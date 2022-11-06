@@ -1,0 +1,75 @@
+<apex:page standardController="Contact" extensions="PropertyOwnerInfoController">
+    <head>
+        <style>
+            body {
+            	font-family: arial;
+            }
+            
+            .title {
+            	text-align: center;
+            	font-size: 20px;
+            }
+            
+            .leftInfo {
+            	font-size: 15px;
+            }
+            table {
+    			border-collapse: collapse;
+    			width: 100%;
+            	border: 1px solid black;
+            	border-spacing: 0;
+    			border-collapse: collapse;
+			}
+			table, th, td {
+    			text-align: center;
+    			vertical-align: middle;
+    			border: 1px solid black;
+    			line-height: 24px;
+			}
+
+			th {
+    			background-color: CornflowerBlue;
+			}
+            
+            .stamp {
+                display: flex;
+    			justify-content: flex-end;
+    			height: 90px;
+    			width: 100%;
+             	margin: 30px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="title">
+            <h2><b>Property Owner Info Report</b></h2>
+        </div>
+        
+		<div class="leftInfo">
+            <p><b>Property Owner Name:</b> {!Contact.Name}</p>
+            <p><b>Total Properties Price($):</b> {!Contact.Total_Property_Price__c}</p>
+        </div>
+        
+        <table border = "1" height="200" align = "center">
+        	<tr>
+            	<th><p><b>Property Type</b></p></th>
+            	<th><p><b>Column 1</b></p></th>
+            	<th><p><b>Column 2</b></p></th>
+            	<th><p><b>Column 3</b></p></th>
+        	</tr>
+        
+        <apex:repeat value="{!DealList}" var="deal" >
+             <tr> 
+             	<td> <p>{!deal.propertyRecordType}</p> </td>  
+             	<td> <p>{!deal.dealsWonStatus}</p> </td>  
+                <td> <p>{!deal.dealAmountSum}</p> </td>  
+                <td> <p>{!deal.dealAmountAfterCommission}</p> </td>  
+             </tr>                  
+        </apex:repeat> 
+    </table>
+        <div class="stamp">
+            <apex:image alt="stamp" title="stampTested" url="{!URLFOR($Resource.stamp)}"/>
+        </div>
+    </body>
+    
+</apex:page>
