@@ -1,4 +1,4 @@
-<apex:page standardController="Contact" extensions="PropertyOwnerInfoController">
+<apex:page standardController="Contact" extensions="PropertyOwnerInfoController" lightningStylesheets="true">
     <head>
         <style>
             body {
@@ -39,7 +39,6 @@
              	margin: 30px 0;
             }
         </style>
-        <apex:slds>
     </head>
     <body>
         <div class="title">
