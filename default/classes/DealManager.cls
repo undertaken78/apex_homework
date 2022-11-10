@@ -1,4 +1,4 @@
-public inherited sharing class DealManager {
+public class DealManager {
 
     public static final String DEFAULT_STATUS = 'Awaiting Approval';
 
@@ -25,7 +25,11 @@ public inherited sharing class DealManager {
         return Database.query('SELECT ' + fields + ' FROM Deal__c WHERE Id IN :ids');
     }
 
-    public static List<Contact> getDealsByStatuses(List<String> statuses, String fields) {
+    public static List<Deal__c> getDealsBySeller(Id contactId, String fields) {
+        return Database.query('SELECT ' + fields + ' FROM Deal__c WHERE Seller__c =: contactId');
+    }
+
+    public static List<Deal__c> getDealsByStatuses(List<String> statuses, String fields) {
         return Database.query('SELECT ' + fields + ' FROM Deal__c WHERE Status__c IN :statuses');
     }
 

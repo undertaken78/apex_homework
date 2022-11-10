@@ -1,75 +1,82 @@
 <apex:page standardController="Contact" extensions="PropertyOwnerInfoController" lightningStylesheets="true">
     <head>
         <style>
-            body {
-            	font-family: arial;
-            }
-            
-            .title {
-            	text-align: center;
-            	font-size: 20px;
+            .title-prop {
+                text-align:center;
+                font-size: 24px;
+                font-weight: bold;
+                color: black;
+                padding: 10px;
+                margin: 15px;
             }
             
             .leftInfo {
-            	font-size: 15px;
+                font-weight: bold;
+                font-size: 15px;
+                color: black;
+            	padding: 15px;
             }
-            table {
-    			border-collapse: collapse;
-    			width: 100%;
-            	border: 1px solid black;
-            	border-spacing: 0;
-    			border-collapse: collapse;
-			}
-			table, th, td {
-    			text-align: center;
-    			vertical-align: middle;
-    			border: 1px solid black;
-    			line-height: 24px;
-			}
 
-			th {
-    			background-color: CornflowerBlue;
-			}
+            .table {
+                font-size: 18px;
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                border: 1px solid black;
+                color: black;
+                padding: 10px;
+                width: 100%;
+            }
             
             .stamp {
                 display: flex;
-    			justify-content: flex-end;
-    			height: 90px;
-    			width: 100%;
-             	margin: 30px 0;
+                justify-content: flex-end;
+                height: 90px;
+                width: 100%;
+                margin: 30px 0;
+            }
+            
+            .header {
+                font-weight: bold;
+                background-color: rgb(100, 100, 228);  
+                text-transform: capitalize;
+                padding: 16px;
+            }
+            
+            .header, .column {
+                font-size: 17px;
+                border: 2px solid black;
+                text-align: center;
+                padding: 8px;
+            }
+            
+            .odd {
+                border: 2px solid black;
             }
         </style>
     </head>
+
     <body>
-        <div class="title">
-            <h2><b>Property Owner Info Report</b></h2>
+        
+        <div class = "title-prop">
+            <apex:outputText value="Property Owner Info Report"/>
         </div>
         
-		<div class="leftInfo">
-            <p><b>Property Owner Name:</b> {!Contact.Name}</p>
-            <p><b>Total Properties Price($):</b> {!Contact.Total_Property_Price__c}</p>
+        <div class="leftInfo">
+            <apex:outputText value="Owner Name: {!Contact.Name}"/><br/>
+            <apex:outputText value="Total Properties Price($): {!Contact.Total_Property_Price__c}"/><br/>
         </div>
-        
-        <table border = "1" height="200" align = "center">
-        	<tr>
-            	<th><p><b>Property Type</b></p></th>
-            	<th><p><b>Column 1</b></p></th>
-            	<th><p><b>Column 2</b></p></th>
-            	<th><p><b>Column 3</b></p></th>
-        	</tr>
-        
-        <apex:repeat value="{!DealList}" var="deal" >
-             <tr> 
-             	<td> <p>{!deal.propertyRecordType}</p> </td>  
-             	<td> <p>{!deal.dealsWonStatus}</p> </td>  
-                <td> <p>{!deal.dealAmountSum}</p> </td>  
-                <td> <p>{!deal.dealAmountAfterCommission}</p> </td>  
-             </tr>                  
-        </apex:repeat> 
-    </table>
+
+        <apex:dataTable value="{!DealList}" var="deal" headerClass="header" styleClass="table" rowClasses="odd"> 
+            <apex:column styleClass="column" headerValue="Property Type" value="{!deal.propertyRecordType }"/>
+            <apex:column styleClass="column" headerValue="Column 1" value="{!deal.dealsWonStatus }"/>
+            <apex:column styleClass="column" headerValue="Column 2" value="{!deal.dealAmountAfterCommission }"/>
+            <apex:column styleClass="column" headerValue="Column 3" value="{!deal.dealAmountSum }"/>            
+        </apex:dataTable>
+
         <div class="stamp">
             <apex:image alt="stamp" title="stampTested" url="{!URLFOR($Resource.stamp)}"/>
         </div>
+
     </body>
-    
 </apex:page>
