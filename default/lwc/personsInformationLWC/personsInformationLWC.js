@@ -10,16 +10,16 @@ class Person {
     }
 }
 
-const person1 = new Person("Виталий", "Цаль", "Мужской", new Date(2004, 2, 27), "arthasWK@mail.ru");
+const person1 = new Person("Виталий", "Цаль", "Мужской", new Date(2004, 2, 27), "arthasWK@gmail.com");
 const person2 = new Person("Даниил", "Сорока", "Мужской", new Date(2003, 2, 24), "danila.gorilla@gmail.com");
-const person3 = new Person("Александр", "Смирнов", "Мужской", new Date(2002, 4, 26), "ssasha.moscow@yandex.ru");
+const person3 = new Person("Александр", "Смирнов", "Мужской", new Date(2002, 4, 26), "ssasha.moscow@gmail.com");
 const person4 = new Person("Юлия", "Кустанович", "Женский", new Date(2001, 5, 25), "finch203@gmail.com");
-const person5 = new Person("Маргарита", "Фабишевская", "Женский", new Date(2000, 6, 24), "exusiai@mail.ru");
+const person5 = new Person("Маргарита", "Фабишевская", "Женский", new Date(2000, 6, 24), "exusiai@gmail.com");
 const person6 = new Person("Канеки", "Кен", "Мужской", new Date(1999, 7, 23), "dead.inside@gmail.com");
 const person7 = new Person("Павел", "Сенла", "Мужской", new Date(1998, 8, 22), "undertaken789@gmail.com");
 const person8 = new Person("Наруто", "Узумаки", "Мужской", new Date(1997, 9, 21), "surtur@gmail.com");
-const person9 = new Person("Ангелина", "Евлеева", "Женский", new Date(1996, 10, 20), "silver.ash@yandex.ru");
-const person10 = new Person("Акаме", "Гуреева", "Женский", new Date(1995, 11, 19), "nname@mail.ru");
+const person9 = new Person("Ангелина", "Евлеева", "Женский", new Date(1996, 10, 20), "silver.ash@gmail.com");
+const person10 = new Person("Акаме", "Гуреева", "Женский", new Date(1995, 11, 19), "nname@gmail.com");
 const persons = [person1, person2, person3, person4, person5, person6, person7, person8, person9, person10];
 
 const columns = [

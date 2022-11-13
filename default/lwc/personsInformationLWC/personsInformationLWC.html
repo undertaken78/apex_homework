@@ -14,9 +14,9 @@
                 <lightning-input class="slds-float_left slds-m-around_xx-small" type="date" name="from" data-id="fromSort" label="From" onchange={handleDateChange}></lightning-input>
                 <lightning-input class="slds-float_left slds-m-around_xx-small" type="date" name="to" data-id="toSort" label="To" onchange={handleDateChange}></lightning-input>
                 <lightning-input class="slds-float_right slds-m-around_xx-small" field-name="Email" type="email" data-id="emailInput" placeholder="user@salesforce.com"
-                    maxlength="36" 
-                    message-when-too-long="Email cannot be longer than 36 characters."
-                    pattern=".+@salesforce.com"
+                    maxlength="30" 
+                    message-when-too-long="Error"
+                    pattern=".+@gmail.com"
                     onchange={handleChange}>
                 </lightning-input>
             </div>
