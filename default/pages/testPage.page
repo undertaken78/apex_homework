@@ -1,0 +1,75 @@
+<apex:page standardController="Contact" extensions="PropertyOwnerInfoController" lightningStylesheets="true">
+    <head>
+        <style>
+			.title-prop {
+            	text-align:center;
+            	font-size: 24px;
+            	font-weight: bold;
+            }
+            
+            .leftInfo {
+            	font-weight: bold;
+            	font-size: 15px;
+            }
+
+            .table {
+            	font-size: 18px;
+            	font-family: arial, sans-serif;
+    			border-collapse: collapse;
+    			width: 100%;
+    			border: 1px solid black;
+    			color: black;
+            }
+            
+            .stamp {
+                display: flex;
+    			justify-content: flex-end;
+    			height: 90px;
+    			width: 100%;
+             	margin: 30px 0;
+            }
+            
+            .header {
+            	font-weight: bold;
+            	background-color: rgb(100, 100, 228);  
+   				text-transform: capitalize;
+  				padding: 16px;
+            }
+            
+            .header, .column {
+            	font-size: 17px;
+				border: 2px solid black;
+    			text-align: center;
+    			padding: 8px;
+            }
+            
+            .odd {
+            	border: 2px solid black;
+            }
+        </style>
+    </head>
+
+    <body>
+        
+        <div class = "title-prop">
+            <apex:outputText value="Property Owner Info Report"/>
+        </div>
+        
+        <div class="leftInfo">
+            <apex:outputText value="Owner Name: {!Contact.Name}"/><br/>
+            <apex:outputText value="Total Properties Price($): {!Contact.Total_Property_Price__c}"/><br/>
+        </div>
+
+        <apex:dataTable value="{!DealList}" var="deal" headerClass="header" styleClass="table" rowClasses="odd"> 
+            <apex:column styleClass="column" headerValue="Property Type" value="{!deal.propertyRecordType }"/>
+            <apex:column styleClass="column" headerValue="Column 1" value="{!deal.dealsWonStatus }"/>
+            <apex:column styleClass="column" headerValue="Column 2" value="{!deal.dealAmountAfterCommission }"/>
+            <apex:column styleClass="column" headerValue="Column 3" value="{!deal.dealAmountSum }"/>            
+        </apex:dataTable>
+
+        <div class="stamp">
+            <apex:image alt="stamp" title="stampTested" url="{!URLFOR($Resource.stamp)}"/>
+        </div>
+
+    </body>
+</apex:page>

@@ -1,0 +1,40 @@
+<template>
+    <lightning-card title="Persons information">
+        <div class="slds-p-around_small slds-clearfix">
+            <div class="slds-clearfix">
+                <lightning-combobox class="slds-float_left slds-m-around_xx-small"
+                    data-id="sortByBox"
+                    label="Sort By"
+                    name="Filter"
+                    value={value}
+                    onchange={handleSort}
+                    options={options}
+                ></lightning-combobox>
+                
+                <lightning-input class="slds-float_left slds-m-around_xx-small" type="date" name="from" data-id="fromSort" label="From" onchange={handleDateChange}></lightning-input>
+                <lightning-input class="slds-float_left slds-m-around_xx-small" type="date" name="to" data-id="toSort" label="To" onchange={handleDateChange}></lightning-input>
+                <lightning-input class="slds-float_right slds-m-around_xx-small" field-name="Email" type="email" data-id="emailInput" placeholder="user@salesforce.com"
+                    maxlength="36" 
+                    message-when-too-long="Email cannot be longer than 36 characters."
+                    pattern=".+@salesforce.com"
+                    onchange={handleChange}>
+                </lightning-input>
+            </div>
+            <div>
+                <lightning-input id="maleBox" class="slds-float_left slds-m-around_x-small" type="checkbox" label="Male" name="Мужской" data-id="checkbox" onclick={handleGenderFilter}></lightning-input>
+                <lightning-input id="femaleBox" class="slds-float_left slds-m-around_x-small" type="checkbox" label="Female" name="Женский" data-id="checkbox" onclick={handleGenderFilter}></lightning-input>
+                <lightning-button-icon class="slds-float_right slds-m-right_small" icon-name="action:reset_password" name="id" onclick={handleReset}></lightning-button-icon>
+            </div>            
+        </div>
+        <div class="slds-p-around_small">
+            <lightning-datatable style="height: 550px"
+                key-field="id"
+                data-id="table"
+                data={data}
+                columns={columns}
+                hide-checkbox-column
+                >        
+            </lightning-datatable>
+        </div>
+    </lightning-card> 
+</template>
