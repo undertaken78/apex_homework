@@ -1,0 +1,64 @@
+<template>
+    <div class="slds-p-bottom_large slds-p-left_large" style="width:500px">
+        <lightning-record-edit-form object-api-name="Property__c">
+
+            <template if:true={cityView}>
+                <lightning-input-field field-name={cityName} label="City" value={city} onchange={propertyChangeVal}> </lightning-input-field>
+            </template>
+
+            <template if:true={countryView}>
+                <lightning-input-field field-name={countryName} label="Country" value={country} onchange={propertyChangeVal}> </lightning-input-field>
+            </template>
+
+            <template if:true={addressView}>
+                <lightning-input-field field-name={addressName} label="Address" value={address} onchange={propertyChangeVal}> </lightning-input-field>
+            </template>
+
+            <lightning-button-icon
+                class="slds-m-left_x-small"
+                type="submit"
+                name="submit"
+                label="Up"
+                icon-name="utility:add"
+                disabled={disableUp}
+                onclick={buttonUp}
+            >
+            </lightning-button-icon>
+
+            <lightning-button-icon
+                class="slds-m-left_x-small"
+                type="submit"
+                name="submit"
+                label="down"
+                icon-name="utility:dash"
+                disabled={disableDown}
+                onclick={buttonDown}
+            >
+            </lightning-button-icon>
+
+        </lightning-record-edit-form>
+
+        <br/>
+
+        <lightning-button
+            class="slds-m-left_x-small"
+            variant="brand"
+            type="submit"
+            name="submit"
+            label="Submit"
+            onclick={handleButtonSubmit}
+            >
+        </lightning-button>
+
+        <lightning-button
+            class="slds-m-left_x-small"
+            variant="destructive"
+            type="close"
+            name="close"
+            label="Close"
+            onclick={b}
+            >
+        </lightning-button>
+
+    </div>
+</template>

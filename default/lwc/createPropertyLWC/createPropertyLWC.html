@@ -1,0 +1,27 @@
+<template>
+	<lightning-card title="Property Creation" icon-name="action:new_person_account">
+		<div class="slds-p-around_medium">
+            
+			<div class="slds-grid slds-wrap">
+
+				<template if:false={nextButton}>
+					<c-child-choose-record-type></c-child-choose-record-type>
+				</template>
+
+				<template if:true={nextButton}>
+					<c-child-create-property></c-child-create-property>
+				</template>
+
+			</div>
+		</div>
+
+		<template if:true ={viewButton}>
+			<lightning-button class="slds-m-left_x-small" label='Next' variant='brand' onclick={nextButtonClick}>
+			</lightning-button>
+		</template>
+
+		<br/>
+
+	</lightning-card>
+
+</template>
