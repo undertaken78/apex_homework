@@ -3,9 +3,9 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 export default class ChildChooseRecordType extends LightningElement {
     value;
-    recordType = '';
+    @api recordType;
     @track objectName = 'Property__c';
-    @track propertyRecordTypes =[];
+    @track propertyRecordTypes = [];
 
     @wire(getObjectInfo, { objectApiName: '$objectName' })
    
@@ -18,41 +18,27 @@ export default class ChildChooseRecordType extends LightningElement {
                 }
             }
             this.value = this.propertyRecordTypes[0].value;
+            this.recordType = this.propertyRecordTypes[0].value;
         }
         else if (error) {
-            console.log('Error while get record types');
             this.propertyRecordTypes = [];
         }
     }
  
-
     get options() {
         return this.propertyRecordTypes;
     }
 
     handleRadioChange(event) {
-        const selectedOption = event.detail.value;
-        this.recordType = selectedOption; // рекорд тип надо засунуть во второй чайлд
-        if (selectedOption == 'Industrial') {
-            
-        }
-        else {
-        }
-      
-        
-        if (selectedOption == 'Office') {
-        }
-        else {
-        }
-        
- 
-        if (selectedOption == 'Space') {
-        }   
-        else {
-        }
+        this.recordType = event.target.value;
     }
 
-
-    
-    
+    nextButtonClick() {
+        this.dispatchEvent(new CustomEvent("nextbuttonclick", {
+            detail:{
+                recordType: this.recordType, 
+                isVisiblePage: false
+            }
+        }));
+    }
 }

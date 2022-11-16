@@ -1,4 +1,4 @@
-import { LightningElement, track, api} from 'lwc';
+import { LightningElement, api} from 'lwc';
 import { createRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -7,11 +7,11 @@ import PROPERTY_OWNER_FIELD from '@salesforce/schema/Property__c.Property_Owner_
 import COUNTRY_FIELD from '@salesforce/schema/Property__c.City__c';
 import CITY_FIELD from '@salesforce/schema/Property__c.Country__c';
 import ADDRESS_FIELD from '@salesforce/schema/Property__c.Address__c';
+import RECORDTYPEID_FIELD from "@salesforce/schema/Property__c.RecordTypeId"
 
-const FIELD_PROPERTY = [COUNTRY_FIELD.fieldApiName, CITY_FIELD.fieldApiName, ADDRESS_FIELD.fieldApiName];
+export default class ChildCreateProperty extends LightningElement {
 
-export default class LdsCreateRecord extends LightningElement {
-
+    @api recordTypeId;
     @api contactId;
     city = '';
     country = '';
@@ -22,14 +22,15 @@ export default class LdsCreateRecord extends LightningElement {
     cityName = CITY_FIELD;
     addressName = ADDRESS_FIELD;
 
-    @track countryView = true;
-    @track cityView = true;
-    @track addressView = true;
+    contactIdView = true;
+    countryView = true;
+    cityView = true;
+    addressView = true;
 
-    @track counterOfView = 3;
+    counterOfView = 3;
 
-    @track disableUp = true;
-    @track disableDown = false;
+    disableUp = true;
+    disableDown = false;
 
     countOfViewInputFields() {
         if (this.cityView & this.countryView & this.addressView) {
@@ -91,8 +92,13 @@ export default class LdsCreateRecord extends LightningElement {
     }
 
     handleButtonSubmit() {
+        this.city = this.template.querySelector('[data-id="city"]').value;
+        this.country = this.template.querySelector('[data-id="country"]').value;
+        this.address = this.template.querySelector('[data-id="address"]').value;
 
         const fieldsProperty = {};
+
+        fieldsProperty[RECORDTYPEID_FIELD.fieldApiName] = this.recordTypeId;
         fieldsProperty[PROPERTY_OWNER_FIELD.fieldApiName] = this.contactId;
         fieldsProperty[CITY_FIELD.fieldApiName] = this.city;
         fieldsProperty[COUNTRY_FIELD.fieldApiName] = this.country;
@@ -102,6 +108,7 @@ export default class LdsCreateRecord extends LightningElement {
             apiName: PROPERTY_OBJECT.objectApiName,
             fieldsProperty
         };
+
         createRecord(recordInput)
             .then(property => {
                 this.dispatchEvent(
@@ -111,6 +118,12 @@ export default class LdsCreateRecord extends LightningElement {
                         variant: 'success'
                     })
                 );
+                this.dispatchEvent(
+                    new CustomEvent("nextbuttonclick", {
+                    detail:{
+                        isVisiblePage: true
+                    }
+                }));
             })
             .catch(error => {
                 this.dispatchEvent(
@@ -120,16 +133,17 @@ export default class LdsCreateRecord extends LightningElement {
                         variant: 'error'
                     })
                 );
-            });
+            }
+        );
+
+        
     }
 
-    recordTypeFromChild() {
-        // 
+    handleCloseButton(event) {
+        this.dispatchEvent(new CustomEvent("nextbuttonclick", {
+            detail:{
+                isVisiblePage: true
+            }
+        }));
     }
-
-    someMethodeToSwitchBetweenView(flag1, flag2) {
-        // здесь напиши метод, потом в parent импортируй этот метод и передай в параметрах булевские переменные
-        // которые переключаются между view
-    }
-
 }

@@ -1,8 +1,18 @@
 <template>
+    <div class="slds-grid slds-wrap">
         <div class="slds-col slds-size_2-of-16">
-            <lightning-radio-group name="radioGroup" label="Property Record Type" options={options} value={value}
+            <lightning-radio-group name="radioGroup" label="Property Record Type" data-id="radiogroup" options={options} value={value}
                 type="radio" onchange={handleRadioChange}>
             </lightning-radio-group>
-        </div>
-		<br/>
+        </div>      
+    </div>
+
+    <br/>
+
+	<lightning-button 
+        class="slds-m-left_x-small" 
+        label='Next' variant='brand' 
+        onclick={nextButtonClick}>
+	</lightning-button>
+
 </template>

@@ -3,15 +3,15 @@
         <lightning-record-edit-form object-api-name="Property__c">
 
             <template if:true={cityView}>
-                <lightning-input-field field-name={cityName} label="City" value={city} onchange={propertyChangeVal}> </lightning-input-field>
+                <lightning-input-field data-id="city" field-name={cityName} label="City" value={city} onchange={propertyChangeVal}> </lightning-input-field>
             </template>
 
             <template if:true={countryView}>
-                <lightning-input-field field-name={countryName} label="Country" value={country} onchange={propertyChangeVal}> </lightning-input-field>
+                <lightning-input-field data-id="country" field-name={countryName} label="Country" value={country} onchange={propertyChangeVal}> </lightning-input-field>
             </template>
 
             <template if:true={addressView}>
-                <lightning-input-field field-name={addressName} label="Address" value={address} onchange={propertyChangeVal}> </lightning-input-field>
+                <lightning-input-field data-id="address" field-name={addressName} label="Address" value={address} onchange={propertyChangeVal}> </lightning-input-field>
             </template>
 
             <lightning-button-icon
@@ -56,7 +56,7 @@
             type="close"
             name="close"
             label="Close"
-            onclick={b}
+            onclick={handleCloseButton}
             >
         </lightning-button>
 
