@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="Owner Info" icon-name="standard:avatar">
+        <div class="slds-p-bottom_large slds-p-left_large" style="width:500px">
+            <div class="slds-box">
+                <p>First Name: {firstName}</p>
+                <p>Last Name: {lastName}</p>
+                <p>Phone: <lightning-formatted-phone value={phone}></lightning-formatted-phone></p>
+                <p>Home Phone: <lightning-formatted-phone value={homePhone}></lightning-formatted-phone></p>
+                <p>Email: <lightning-formatted-email value={email}></lightning-formatted-email></p>
+                <p>Total Property Price: {totalPropertyPrice}</p>
+            </div>
+                <br/>
+            <lightning-button label="Owner Page" title="Contact record page" onclick={navigateToOwnerPage} class="slds-m-top_medium" variant="brand"></lightning-button>
+        </div>
+    </lightning-card>
+</template>

@@ -1,21 +1,27 @@
 import { LightningElement, api} from 'lwc';
 import { createRecord } from 'lightning/uiRecordApi';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-import PROPERTY_OBJECT from '@salesforce/schema/Property__c';
-import PROPERTY_OWNER_FIELD from '@salesforce/schema/Property__c.Property_Owner__c';
-import COUNTRY_FIELD from '@salesforce/schema/Property__c.City__c';
-import CITY_FIELD from '@salesforce/schema/Property__c.Country__c';
-import ADDRESS_FIELD from '@salesforce/schema/Property__c.Address__c';
-import RECORDTYPEID_FIELD from "@salesforce/schema/Property__c.RecordTypeId"
+import{
+    PROPERTY_OBJECT,
+    PROPERTY_OWNER_FIELD,
+    SOLD_PRICE_FIELD,
+    RENT_PRICE_FIELD,
+    COUNTRY_FIELD,
+    CITY_FIELD,
+    ADDRESS_FIELD,
+    RECORDTYPEID_FIELD,
+    showNotification
+} from "c/utils"
 
 export default class ChildCreateProperty extends LightningElement {
 
     @api recordTypeId;
-    @api contactId;
+    @api recordId;
     city = '';
     country = '';
     address = '';
+    rentPrice;
+    soldPrice;
     
         
     countryName = COUNTRY_FIELD;
@@ -92,32 +98,30 @@ export default class ChildCreateProperty extends LightningElement {
     }
 
     handleButtonSubmit() {
+        this.rentPrice = this.template.querySelector('[data-id="rentprice"]').value;
+        this.soldPrice = this.template.querySelector('[data-id="soldprice"]').value;
         this.city = this.template.querySelector('[data-id="city"]').value;
         this.country = this.template.querySelector('[data-id="country"]').value;
         this.address = this.template.querySelector('[data-id="address"]').value;
 
         const fieldsProperty = {};
 
+        fieldsProperty[SOLD_PRICE_FIELD.fieldApiName] = this.soldPrice;
+        fieldsProperty[RENT_PRICE_FIELD.fieldApiName] = this.rentPrice;
         fieldsProperty[RECORDTYPEID_FIELD.fieldApiName] = this.recordTypeId;
-        fieldsProperty[PROPERTY_OWNER_FIELD.fieldApiName] = this.contactId;
+        fieldsProperty[PROPERTY_OWNER_FIELD.fieldApiName] = this.recordId;
         fieldsProperty[CITY_FIELD.fieldApiName] = this.city;
         fieldsProperty[COUNTRY_FIELD.fieldApiName] = this.country;
         fieldsProperty[ADDRESS_FIELD.fieldApiName] = this.address;
 
         const recordInput = {
-            apiName: PROPERTY_OBJECT.objectApiName,
+            ApiName: PROPERTY_OBJECT.objectApiName,
             fieldsProperty
         };
 
         createRecord(recordInput)
             .then(property => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title:'Success',
-                        message: 'Property record has been created',
-                        variant: 'success'
-                    })
-                );
+                showNotification('Success', 'Property record has been created', 'success');
                 this.dispatchEvent(
                     new CustomEvent("nextbuttonclick", {
                     detail:{
@@ -126,13 +130,7 @@ export default class ChildCreateProperty extends LightningElement {
                 }));
             })
             .catch(error => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title:'Error creating property',
-                        message: error.body.message,
-                        variant: 'error'
-                    })
-                );
+                showNotification('Error creating property', error.body.message, 'error');
             }
         );
 

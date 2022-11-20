@@ -2,6 +2,16 @@
     <div class="slds-p-bottom_large slds-p-left_large" style="width:500px">
         <lightning-record-edit-form object-api-name="Property__c">
 
+            <div class="slds-form-element">
+                <lightning-input-field data-id="soldprice" field-name="Sold_Price__c"> </lightning-input-field>
+            </div>
+
+            <div class="slds-form-element">
+                <lightning-input-field data-id="rentprice" field-name="Rent_Price__c"></lightning-input-field>
+            </div>
+
+            <lightning-input-field disabled="true" field-name="Property_Owner__c" value={recordId}></lightning-input-field>
+
             <template if:true={cityView}>
                 <lightning-input-field data-id="city" field-name={cityName} label="City" value={city} onchange={propertyChangeVal}> </lightning-input-field>
             </template>
