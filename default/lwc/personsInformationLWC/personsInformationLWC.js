@@ -1,70 +1,35 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement} from 'lwc';
 
-class Person {
-    constructor(firstName, lastName, gender, birthday, email) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.gender = gender;
-    this.birthday = birthday;
-    this.email = email;
-    }
-}
+import{
+    PERSONS,
+    PERSON_COLUMNS,
+    PERSON_OPTIONS
+} from 'c/utils'
 
-const person1 = new Person("Виталий", "Цаль", "Мужской", new Date(2004, 2, 27), "arthasWK@gmail.com");
-const person2 = new Person("Даниил", "Сорока", "Мужской", new Date(2003, 2, 24), "danila.gorilla@gmail.com");
-const person3 = new Person("Александр", "Смирнов", "Мужской", new Date(2002, 4, 26), "ssasha.moscow@gmail.com");
-const person4 = new Person("Юлия", "Кустанович", "Женский", new Date(2001, 5, 25), "finch203@gmail.com");
-const person5 = new Person("Маргарита", "Фабишевская", "Женский", new Date(2000, 6, 24), "exusiai@gmail.com");
-const person6 = new Person("Канеки", "Кен", "Мужской", new Date(1999, 7, 23), "dead.inside@gmail.com");
-const person7 = new Person("Павел", "Сенла", "Мужской", new Date(1998, 8, 22), "undertaken789@gmail.com");
-const person8 = new Person("Наруто", "Узумаки", "Мужской", new Date(1997, 9, 21), "surtur@gmail.com");
-const person9 = new Person("Ангелина", "Евлеева", "Женский", new Date(1996, 10, 20), "silver.ash@gmail.com");
-const person10 = new Person("Акаме", "Гуреева", "Женский", new Date(1995, 11, 19), "nname@gmail.com");
-const persons = [person1, person2, person3, person4, person5, person6, person7, person8, person9, person10];
-
-const columns = [
-    { label: 'FirstName', fieldName: 'firstName', hideDefaultActions: true},
-    { label: 'LastName', fieldName: 'lastName', hideDefaultActions: true},
-    { label: 'Gender', fieldName: 'gender', hideDefaultActions: true},
-    { label: 'Birthday', fieldName: 'birthday', type: 'date', hideDefaultActions: true},
-    { label: 'Email', fieldName: 'email', type: 'email', hideDefaultActions: true},
-];
-
-const options = [
-    { value: 'firstName', label: 'FirstName'},
-    { value: 'lastName', label: 'LastName'},
-    { value: 'email', label: 'Email'},
-];
 
 export default class PersonsInformation extends LightningElement {
-    data = [...persons];
+    data = [...PERSONS];
     filterGender = '';
     dateRange = ['', ''];
-    sortBy = '';
+    sortByKey = '';
     emailSearchKey = '';
-    columns = columns;
-    options = options;
+    columns = PERSON_COLUMNS;
+    options = PERSON_OPTIONS;
     value = 'firstName';
 
     recordsSort() {
-        this.data = [...persons];
-        this.emailSearchSort();
-        this.dateRangeSort();
-        this.genderSort();
-        this.sortBySort();
+        this.data = [...PERSONS];
+        this.emailSearchFilter();
+        this.dateRangeFilter();
+        this.genderFilter();
+        this.sortBy();
     }
 
-    emailSearchSort() {
-        let searchRecords = [];
-        for (let record of this.data) {
-            if(record.email.startsWith(this.emailSearchKey)){
-                searchRecords.push(record);
-            }
-        }
-        this.data = searchRecords;
+    emailSearchFilter() {
+        this.data = this.data.filter(record => record.email.startsWith(this.emailSearchKey));
     }
 
-    dateRangeSort() {
+    dateRangeFilter() {
         const fromDate = new Date(this.dateRange[0]);
         const toDate = new Date(this.dateRange[1]);
 
@@ -85,46 +50,39 @@ export default class PersonsInformation extends LightningElement {
         this.data = searchRecords;
     }
 
-    genderSort() {
-        let records = [];
-        if (this.filterGender != '')
-        {
-            for (let record of this.data) {
-                if (record.gender == this.filterGender) {
-                    records.push(record);             
-                }           
-            }      
-            this.data = records;
+    genderFilter() {
+        if (this.filterGender != '') { 
+            this.data = this.data.filter(record => record.gender == this.filterGender);
         }
         else this.checkGenders();
     }
 
     checkGenders() {
-        const male = this.data.find(person => person.gender == 'Мужской');
-        const female = this.data.find(person => person.gender == 'Женский');
-        let checkboxes = Array.from(this.template.querySelectorAll('[data-id="checkbox"]'));
+        const male = this.data.find(person => person.gender == 'Male');
+        const female = this.data.find(person => person.gender == 'Female');
+        const checkboxes = Array.from(this.template.querySelectorAll('[data-id="checkbox"]'));
         checkboxes.forEach(element => element.disabled = false);
 
         if (male == undefined) {
-            let element = checkboxes.find(element => element.name == 'Мужской');
+            const element = checkboxes.find(element => element.name == 'Male');
             element.disabled = true;
         }
 
         if (female == undefined) {
-            let element = checkboxes.find(element => element.name == 'Женский');
+            const element = checkboxes.find(element => element.name == 'Female');
             element.disabled = true;
         }
     }
 
-    sortBySort() {
-        let keyValue = (key) => {return key[this.sortBy];};
+    sortBy() {
+        let keyValue = (key) => {return key[this.sortByKey];};
         let parseData = JSON.parse(JSON.stringify(this.data));
 
-        parseData.sort((x, y) => {
-            x = keyValue(x) ? keyValue(x) : ''; 
-            y = keyValue(y) ? keyValue(y) : '';
+        parseData.sort((firstValue, secondValue) => {
+            firstValue = keyValue(firstValue) ? keyValue(firstValue) : ''; 
+            secondValue = keyValue(secondValue) ? keyValue(secondValue) : '';
            
-            return (x > y) - (y > x);
+            return (firstValue > secondValue) - (secondValue > firstValue);
         });
         this.data = parseData;
     }
@@ -135,7 +93,7 @@ export default class PersonsInformation extends LightningElement {
     }
 
     handleSort(event){
-        this.sortBy = event.detail.value;
+        this.sortByKey = event.detail.value;
         this.recordsSort();
     }
 
@@ -158,10 +116,10 @@ export default class PersonsInformation extends LightningElement {
     }
 
     handleReset(event) {
-        this.data = [...persons];
+        this.data = [...PERSONS];
         this.filterGender = '';
         this.dateRange = ['', ''];
-        this.sortBy = '';
+        this.sortByKey = '';
         this.emailSearchKey = '';
 
         this.template.querySelector('[data-id="sortByBox"]').value = 'firstName';
