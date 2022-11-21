@@ -54,8 +54,8 @@ const PERSON_OPTIONS = [
     { value: 'email', label: 'Email'},
 ];
 
-const showNotification = (title, message, variant) => {
-    this.dispatchEvent(
+const showNotification = (page, title, message, variant) => {
+    page.dispatchEvent(
         new ShowToastEvent({
             title,      
             message,    

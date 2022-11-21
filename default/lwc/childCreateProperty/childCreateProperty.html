@@ -1,62 +1,63 @@
 <template>
-    <div class="slds-p-bottom_large slds-p-left_large" style="width:500px">
-        <lightning-record-edit-form object-api-name="Property__c">
+    <template for:each={rowsCount} for:item="item" for:index="index">
+        <lightning-record-edit-form object-api-name="Property__c" key={item.id}>
+            <lightning-layout>
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="City__c"></lightning-input-field>
+                </lightning-layout-item>
 
-            <div class="slds-form-element">
-                <lightning-input-field data-id="soldprice" field-name="Sold_Price__c"> </lightning-input-field>
-            </div>
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="Country__c"></lightning-input-field>
+                </lightning-layout-item>
 
-            <div class="slds-form-element">
-                <lightning-input-field data-id="rentprice" field-name="Rent_Price__c"></lightning-input-field>
-            </div>
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="Address__c"></lightning-input-field>
+                </lightning-layout-item>
 
-            <lightning-input-field disabled="true" field-name="Property_Owner__c" value={recordId}></lightning-input-field>
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="Property_Owner__c" value={recordId} disabled="true"></lightning-input-field>
+                </lightning-layout-item>
 
-            <template if:true={cityView}>
-                <lightning-input-field data-id="city" field-name={cityName} label="City" value={city} onchange={propertyChangeVal}> </lightning-input-field>
-            </template>
+                <lightning-layout-item>
+                    <lightning-input-field field-name="RecordTypeId" value={recordTypeId} disabled="true"></lightning-input-field>
+                </lightning-layout-item>
 
-            <template if:true={countryView}>
-                <lightning-input-field data-id="country" field-name={countryName} label="Country" value={country} onchange={propertyChangeVal}> </lightning-input-field>
-            </template>
+                <lightning-layout-item class="slds-form-element slds-m-top_large">
+                    <lightning-button-icon
+                        class="slds-m-left_x-small"
+                        type="submit"
+                        name="submit"
+                        label="Up"
+                        icon-name="utility:add"
+                        disabled={disableUp}
+                        onclick={buttonUp}>
+                    </lightning-button-icon>
+                </lightning-layout-item>
 
-            <template if:true={addressView}>
-                <lightning-input-field data-id="address" field-name={addressName} label="Address" value={address} onchange={propertyChangeVal}> </lightning-input-field>
-            </template>
+                <lightning-layout-item class="slds-form-element slds-m-top_large">
+                    <lightning-button-icon
+                        class="slds-m-left_x-small"
+                        type="down"
+                        name="down"
+                        label="down"
+                        icon-name="utility:dash"
+                        access-key={item.id}
+                        disabled={disableDown}
+                        onclick={buttonDown}>
+                    </lightning-button-icon>
+                </lightning-layout-item>
 
-            <lightning-button-icon
-                class="slds-m-left_x-small"
-                type="submit"
-                name="submit"
-                label="Up"
-                icon-name="utility:add"
-                disabled={disableUp}
-                onclick={buttonUp}
-            >
-            </lightning-button-icon>
-
-            <lightning-button-icon
-                class="slds-m-left_x-small"
-                type="submit"
-                name="submit"
-                label="down"
-                icon-name="utility:dash"
-                disabled={disableDown}
-                onclick={buttonDown}
-            >
-            </lightning-button-icon>
-
+            </lightning-layout>
         </lightning-record-edit-form>
+    </template>
 
-        <br/>
-
-        <lightning-button
+    <lightning-button
             class="slds-m-left_x-small"
             variant="brand"
             type="submit"
             name="submit"
             label="Submit"
-            onclick={handleButtonSubmit}
+            onclick={handleSubmitButton}
             >
         </lightning-button>
 
@@ -70,5 +71,4 @@
             >
         </lightning-button>
 
-    </div>
 </template>

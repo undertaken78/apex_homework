@@ -1,143 +1,55 @@
-import { LightningElement, api} from 'lwc';
-import { createRecord } from 'lightning/uiRecordApi';
+import { LightningElement, api, track} from 'lwc';
 
 import{
-    PROPERTY_OBJECT,
-    PROPERTY_OWNER_FIELD,
-    SOLD_PRICE_FIELD,
-    RENT_PRICE_FIELD,
-    COUNTRY_FIELD,
-    CITY_FIELD,
-    ADDRESS_FIELD,
-    RECORDTYPEID_FIELD,
     showNotification
 } from "c/utils"
 
 export default class ChildCreateProperty extends LightningElement {
-
     @api recordTypeId;
     @api recordId;
-    city = '';
-    country = '';
-    address = '';
-    rentPrice;
-    soldPrice;
+
+    @track rowsCount = [{ id: 0 }];;
     
-        
-    countryName = COUNTRY_FIELD;
-    cityName = CITY_FIELD;
-    addressName = ADDRESS_FIELD;
+    index = 0;
+    disableUp = false;
+    disableDown = true;
 
-    contactIdView = true;
-    countryView = true;
-    cityView = true;
-    addressView = true;
-
-    counterOfView = 3;
-
-    disableUp = true;
-    disableDown = false;
-
-    countOfViewInputFields() {
-        if (this.cityView & this.countryView & this.addressView) {
-            this.counterOfView = 3;
-        }
-
-        if (this.cityView & this.countryView & !this.addressView) {
-            this.counterOfView = 2;
-        }
-
-        if (this.cityView & !this.countryView & !this.addressView) {
-            this.counterOfView = 1;
-        }
+    buttonUp() {
+        this.index++;
+        const newRow = { id: this.index };
+        this.rowsCount.push(newRow);
+        this.disableUp = this.rowsCount.length == 3 ? true : false
+        this.disableDown = this.rowsCount.length == 1 ? true : false
     }
-
-    buttonUp(event) {
-        this.countOfViewInputFields();
-
-        if(this.counterOfView === 2) {
-            this.addressView = true;
-            this.disableDown = false;
-            this.disableUp = true;
-        }
-
-        if(this.counterOfView === 1) {
-            this.countryView = true;
-            this.disableDown = false;
-            this.disableUp = false;
-        }
-    }
-
+    
     buttonDown(event) {
-        this.countOfViewInputFields();
-        if(this.counterOfView === 3) {
-            this.addressView = false;
-            this.disableUp = false;
-        }
-
-        if(this.counterOfView === 2) {
-            this.countryView = false;
-            this.disableUp = false;
-            this.disableDown = true;
-        }
-
+        this.rowsCount = this.rowsCount.filter(function (element) {
+            return element.id != parseInt(event.target.accessKey);
+        });
+        this.disableUp = this.rowsCount.length == 3 ? true : false
+        this.disableDown = this.rowsCount.length == 1 ? true : false
     }
 
-    propertyChangeVal(event) {
-        if(event.target.label === 'City') {
-            this.city = event.target.label;
-        }
-
-        if(event.target.label === 'Country') {
-            this.country = event.target.label;
-        }
-
-        if(event.target.label === 'Address') {
-            this.address = event.target.label;
-        }
-    }
-
-    handleButtonSubmit() {
-        this.rentPrice = this.template.querySelector('[data-id="rentprice"]').value;
-        this.soldPrice = this.template.querySelector('[data-id="soldprice"]').value;
-        this.city = this.template.querySelector('[data-id="city"]').value;
-        this.country = this.template.querySelector('[data-id="country"]').value;
-        this.address = this.template.querySelector('[data-id="address"]').value;
-
-        const fieldsProperty = {};
-
-        fieldsProperty[SOLD_PRICE_FIELD.fieldApiName] = this.soldPrice;
-        fieldsProperty[RENT_PRICE_FIELD.fieldApiName] = this.rentPrice;
-        fieldsProperty[RECORDTYPEID_FIELD.fieldApiName] = this.recordTypeId;
-        fieldsProperty[PROPERTY_OWNER_FIELD.fieldApiName] = this.recordId;
-        fieldsProperty[CITY_FIELD.fieldApiName] = this.city;
-        fieldsProperty[COUNTRY_FIELD.fieldApiName] = this.country;
-        fieldsProperty[ADDRESS_FIELD.fieldApiName] = this.address;
-
-        const recordInput = {
-            ApiName: PROPERTY_OBJECT.objectApiName,
-            fieldsProperty
-        };
-
-        createRecord(recordInput)
-            .then(property => {
-                showNotification('Success', 'Property record has been created', 'success');
-                this.dispatchEvent(
-                    new CustomEvent("nextbuttonclick", {
-                    detail:{
-                        isVisiblePage: true
-                    }
-                }));
-            })
-            .catch(error => {
-                showNotification('Error creating property', error.body.message, 'error');
+    handleSubmitButton() {
+        let isInputValid;
+        this.template.querySelectorAll('lightning-input-field').forEach(element => {
+            isInputValid = element.reportValidity();
+        });
+        if (isInputValid) {
+            try {
+                this.template.querySelectorAll('lightning-record-edit-form').forEach(element => {
+                    element.submit();
+                });
+                this.handleCloseButton();
+                showNotification(this, "Success", "Property record has been created", "success");
+            } 
+            catch(error) {
+                showNotification("Error creating property", error.getMessage(), "error");
             }
-        );
-
-        
+        } 
     }
 
-    handleCloseButton(event) {
+    handleCloseButton() {  
         this.dispatchEvent(new CustomEvent("nextbuttonclick", {
             detail:{
                 isVisiblePage: true
