@@ -54,6 +54,24 @@ const PERSON_OPTIONS = [
     { value: 'email', label: 'Email'},
 ];
 
+import LOG_LWC_OBJECT_TYPE from '@salesforce/schema/LogLWC__c.ObjectType__c';
+import LOG_LWC_ACTION_TYPE from '@salesforce/schema/LogLWC__c.ActionType__c';
+import LOG_LWC_DESCRIPTION from '@salesforce/schema/LogLWC__c.Description__c';
+import LOG_LWC_IS_SUCCESSFUL from '@salesforce/schema/LogLWC__c.IsSuccessful__c';
+import LOG_LWC_ERROR_MESSAGE from '@salesforce/schema/LogLWC__c.ErrorMessage__c';
+import LOG_LWC_CREATED_DATE from '@salesforce/schema/LogLWC__c.CreatedDate';
+
+const LOG_LWC_TABLE_FIELDS = 'ObjectType__c, ActionType__c, Description__c, IsSuccessful__c, ErrorMessage__c, CreatedDate';
+
+const LOG_LWC_TABLE_COLUMNS = [
+    { label: 'ObjectType', fieldName: 'ObjectType__c', hideDefaultActions: true},
+    { label: 'ActionType', fieldName: 'ActionType__c', hideDefaultActions: true},
+    { label: 'Description', fieldName: 'Description__c', hideDefaultActions: true },
+    { label: 'IsSuccessful', fieldName: 'IsSuccessful__c', hideDefaultActions: true},
+    { label: 'ErrorMessage', fieldName: 'ErrorMessage__c', hideDefaultActions: true},
+    { label: 'CreatedDate', fieldName: 'CreatedDate', hideDefaultActions: true},
+];
+
 const showNotification = (page, title, message, variant) => {
     page.dispatchEvent(
         new ShowToastEvent({
@@ -84,5 +102,13 @@ export {
     PERSONS,
     PERSON_COLUMNS,
     PERSON_OPTIONS,
+    LOG_LWC_OBJECT_TYPE,
+    LOG_LWC_ACTION_TYPE,
+    LOG_LWC_DESCRIPTION,
+    LOG_LWC_IS_SUCCESSFUL,
+    LOG_LWC_ERROR_MESSAGE,
+    LOG_LWC_CREATED_DATE,
+    LOG_LWC_TABLE_FIELDS,
+    LOG_LWC_TABLE_COLUMNS,
     showNotification
 }

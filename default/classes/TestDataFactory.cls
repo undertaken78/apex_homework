@@ -13,6 +13,8 @@ public with sharing class TestDataFactory {
 
     public static Info__c getInfo(Deal__c deal, Boolean serialize) {
 
+        
+
         Client__c client = new Client__c();
         client.Sfid__c = deal.Customer__r.Id;
         client.FirstName__c = String.isBlank(deal.Customer__r.FirstName) ? deal.Customer__r.FirstName : '';
@@ -45,6 +47,14 @@ public with sharing class TestDataFactory {
         if(serialize) insert info;
 
         return info;
+    }
+
+    public static LogLWC__c createLogLWC(string objectType, string actionType) {
+        LogLWC__c logLWC = new LogLwc__c(ObjectType__c = objectType, ActionType__c = actionType, 
+                                      Description__c = 'description', IsSuccessful__c = true, 
+                                      ErrorMessage__c = ' ');
+        insert logLWC;
+        return logLWC;
     }
 
     public static Log__c createLog() {

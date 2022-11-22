@@ -1,0 +1,75 @@
+<template>
+    <lightning-card title="Property Creation" icon-name="action:new_person_account">
+    <template for:each={rowsCount} for:item="item" for:index="index">
+        <lightning-record-edit-form object-api-name="Property__c" key={item.id}>
+            <lightning-layout>
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="City__c"></lightning-input-field>
+                </lightning-layout-item>
+
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="Country__c"></lightning-input-field>
+                </lightning-layout-item>
+
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="Address__c"></lightning-input-field>
+                </lightning-layout-item>
+
+                <lightning-layout-item class="slds-form-element">
+                    <lightning-input-field field-name="Property_Owner__c" value={recordId} disabled="true"></lightning-input-field>
+                </lightning-layout-item>
+
+                <lightning-layout-item>
+                    <lightning-input-field field-name="RecordTypeId" value={recordTypeId} disabled="true"></lightning-input-field>
+                </lightning-layout-item>
+
+                <lightning-layout-item class="slds-form-element slds-m-top_large">
+                    <lightning-button-icon
+                        class="slds-m-left_x-small"
+                        type="submit"
+                        name="submit"
+                        label="Up"
+                        icon-name="utility:add"
+                        disabled={disableUp}
+                        onclick={buttonUp}>
+                    </lightning-button-icon>
+                </lightning-layout-item>
+
+                <lightning-layout-item class="slds-form-element slds-m-top_large">
+                    <lightning-button-icon
+                        class="slds-m-left_x-small"
+                        type="down"
+                        name="down"
+                        label="down"
+                        icon-name="utility:dash"
+                        access-key={item.id}
+                        disabled={disableDown}
+                        onclick={buttonDown}>
+                    </lightning-button-icon>
+                </lightning-layout-item>
+
+            </lightning-layout>
+        </lightning-record-edit-form>
+    </template>
+
+        <lightning-button
+            class="slds-m-left_x-small"
+            variant="brand"
+            type="submit"
+            name="submit"
+            label="Submit"
+            onclick={handleSubmitButton}
+            >
+        </lightning-button>
+
+        <lightning-button
+            class="slds-m-left_x-small"
+            variant="destructive"
+            type="close"
+            name="close"
+            label="Close"
+            onclick={handleCloseButton}
+            >
+        </lightning-button>
+    </lightning-card>
+</template>
