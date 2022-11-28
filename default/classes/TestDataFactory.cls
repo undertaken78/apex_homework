@@ -12,9 +12,6 @@ public with sharing class TestDataFactory {
             [SELECT Id FROM Profile WHERE Name = 'Standard Platform User' LIMIT 1].Id;
 
     public static Info__c getInfo(Deal__c deal, Boolean serialize) {
-
-        
-
         Client__c client = new Client__c();
         client.Sfid__c = deal.Customer__r.Id;
         client.FirstName__c = String.isBlank(deal.Customer__r.FirstName) ? deal.Customer__r.FirstName : '';

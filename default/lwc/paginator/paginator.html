@@ -1,0 +1,27 @@
+<template>
+    <lightning-card class="slds-align_absolute-center">
+        <div class="slds-grid slds-grid_vertical-align-center slds-var-m-horizontal_x-small">
+            <div>
+                <lightning-button class="slds-m-horizontal_x-large"
+                    variant="brand" 
+                    onclick={previousPage} 
+                    label="Previous" 
+                    disabled={isPreviousButtonDisabled}>
+                </lightning-button>
+            </div>
+
+            <div class="slds-m-horizontal_x-large">
+                <p>{numberOfPage} of {countOfPages}</p>
+            </div>
+
+            <div>
+                <lightning-button class="slds-m-horizontal_x-large"
+                    variant="brand"
+                    onclick={nextPage} 
+                    label="Next" 
+                    disabled={isNextButtonDisabled}
+                ></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

@@ -59,6 +59,14 @@ public with sharing class PropertyManager {
         return property;
     }
 
+    public static Integer getPropertyCount() {
+        return [SELECT count() FROM Property__c];
+    }
+
+    public static List<Property__c> getPropertiesForPage(String fields, Integer countOfItems, Integer offset) {
+        return Database.query('SELECT ' + fields + ' FROM Property__c ORDER BY Sold_Price__c LIMIT ' + countOfItems + 'OFFSET ' + offset);
+    }
+
     public static List<Property__c> getPropertiesByIds(List<Id> ids, String fields) {
         return Database.query('SELECT ' + fields + ' FROM Property__c WHERE Id IN :ids');
     }

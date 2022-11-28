@@ -1,6 +1,7 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import PROPERTY_OBJECT from '@salesforce/schema/Property__c';
+import PROPERTY_NAME from '@salesforce/schema/Property__c.Name';
 import PROPERTY_OWNER_ID from '@salesforce/schema/Property__c.Property_Owner__r.Id';
 import SOLD_PRICE_FIELD from "@salesforce/schema/Property__c.Sold_Price__c"
 import RENT_PRICE_FIELD from "@salesforce/schema/Property__c.Rent_Price__c"
@@ -16,6 +17,9 @@ import PROPERTY_OWNER_PHONE_FIELD from '@salesforce/schema/Property__c.Property_
 import PROPERTY_OWNER_HOME_PHONE_FIELD from '@salesforce/schema/Property__c.Property_Owner__r.HomePhone';
 import PROPERTY_OWNER_EMAIL_FIELD from '@salesforce/schema/Property__c.Property_Owner__r.Email';
 import PROPERTY_OWNER_TOTAL_PROPERTY_PRICE_FIELD from '@salesforce/schema/Property__c.Property_Owner__r.Total_Property_Price__c';
+
+const PROPERTY_PAGE_FIELDS = 'Id, Name, Sold_Price__c, Picture__c';
+const PROPERTY_PAGE_SIZE = 8;
 
 const PROPERTY_OWNER_INFO_FIELDS = [
     PROPERTY_OWNER_ID,
@@ -83,8 +87,11 @@ const showNotification = (page, title, message, variant) => {
 }
 
 export {
+    PROPERTY_NAME,
     PROPERTY_OWNER_INFO_FIELDS,
     PROPERTY_OBJECT,
+    PROPERTY_PAGE_FIELDS,
+    PROPERTY_PAGE_SIZE,
     PROPERTY_OWNER_ID,
     PROPERTY_OWNER_FIELD,
     SOLD_PRICE_FIELD,
