@@ -1,4 +1,8 @@
 <template>
+    <template if:true={error}>
+        <c-error-handler errors={error}></c-error-handler>
+    </template>
+
     <template if:true={propertyObject}>
         <div class="property slds-box slds-m-around_small" onclick={handlePropertyClick}>
             <img

@@ -1,6 +1,11 @@
 <template>
     <lightning-card class="slds-align_absolute-center">
         <div class="slds-grid slds-grid_vertical-align-center slds-var-m-horizontal_x-small">
+
+            <template if:true={error}>
+                <c-error-handler errors={error}></c-error-handler>
+            </template>
+
             <div>
                 <lightning-button class="slds-m-horizontal_x-large"
                     variant="brand" 

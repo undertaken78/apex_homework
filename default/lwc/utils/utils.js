@@ -86,6 +86,43 @@ const showNotification = (page, title, message, variant) => {
     );
 }
 
+export function reduceErrors(errors) {
+    if (!Array.isArray(errors)) {
+        errors = [errors];
+    }
+ 
+    return (
+        errors
+            .filter((error) => !!error)
+            .map((error) => {
+                if (error.body.duplicateResults && error.body.duplicateResults.length > 0) {
+                    return error.body.duplicateResults.map((e) => e.message);
+                }
+
+                else if (error.body.fieldErrors && error.body.fieldErrors.length > 0 && Array.isArray(error.body.fieldErrors)) {
+                    return error.body.fieldErrors.map((e) => e.message);
+                }
+
+                else if (error.body.pageErrors && error.body.pageErrors.length > 0 && Array.isArray(error.body.pageErrors)) {
+                    return error.body.pageErrors.map((e) => e.message);
+                }
+
+                else if (Array.isArray(error.body)) {
+                    return error.body.map((e) => e.message);
+                }
+                else if (error.body && typeof error.body.message === 'string') {
+                    return error.body.message;
+                }
+                else if (typeof error.message === 'string') {
+                    return error.message;
+                }
+                return error.statusText;
+            })
+            .reduce((prev, curr) => prev.concat(curr), [])
+            .filter((message) => !!message)
+    );
+}
+
 export {
     PROPERTY_NAME,
     PROPERTY_OWNER_INFO_FIELDS,

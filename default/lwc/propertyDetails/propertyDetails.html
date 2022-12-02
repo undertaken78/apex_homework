@@ -1,5 +1,10 @@
 <template>
     <lightning-card title="Property Details">
+
+        <template if:true={error}>
+            <c-error-handler errors={error}></c-error-handler>
+        </template>
+
         <div class="slds-p-around_large">
             <div class="slds-text-align_center slds-text-heading_medium slds-m-bottom_medium">
                 <b>{propertyName}</b>

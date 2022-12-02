@@ -1,5 +1,13 @@
 <template>
     <lightning-card title ="Properties View">
+        <template if:true={isLoading}>
+            <c-spinner></c-spinner>
+        </template>
+
+        <template if:true={error}>
+            <c-error-handler errors={error}></c-error-handler>
+        </template>
+
         <div class="slds-grid slds-wrap">
             <template for:each={propertyList} for:item="property">
                 <div class="slds-col slds-size_3-of-12" key = {propertyList.Id}>

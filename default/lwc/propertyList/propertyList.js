@@ -4,9 +4,13 @@ import getPropertiesCount from '@salesforce/apex/PropertyController.getPropertie
 import {PROPERTY_PAGE_FIELDS, PROPERTY_PAGE_SIZE} from 'c/utils';
 
 export default class PropertyList extends LightningElement {
+    isLoading = true;
+    error;
+
     numberOfPage = 1;
     sizeOfPage = PROPERTY_PAGE_SIZE;
     totalPropertiesCount = 0;
+
     @track propertyList = [];
 
     @wire(getPropertiesCount)
@@ -15,6 +19,7 @@ export default class PropertyList extends LightningElement {
             this.totalPropertiesCount = data;
         }
         else if (error) {
+            this.error = error;
             this.totalPropertiesCount = 0;
         }
     }
@@ -25,15 +30,19 @@ export default class PropertyList extends LightningElement {
             this.propertyList = data;
         }
         else if (error) {
+            this.error = error;
             this.propertyList = [];
         }
+        this.isLoading = false;
     }
 
     nextPage() {
+        this.isLoading = true;
         ++this.numberOfPage;
     }
 
     previousPage() {
+        this.isLoading = true;
         --this.numberOfPage;
     }
 }

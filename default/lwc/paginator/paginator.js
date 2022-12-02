@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 
 export default class Paginator extends LightningElement {
+    error;
     @api numberOfPage;
     @api pageSize;
     @api totalItemsCount;
@@ -9,7 +10,12 @@ export default class Paginator extends LightningElement {
     isPreviousButtonDisabled = true;
 
     get countOfPages() {
-        return Math.ceil(this.totalItemsCount / this.pageSize);
+        try{
+            return Math.ceil(this.totalItemsCount / this.pageSize);
+        }
+        catch(error) {
+            this.error = error;
+        }
     }
 
     buttonsDisabling() {

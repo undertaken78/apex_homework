@@ -10,7 +10,7 @@ import {
     ADDRESS_FIELD,
 } from 'c/utils';
 export default class PropertyDetails extends LightningElement {
-
+    error;
     subscription = null;
     propertyId;
     propertyName;
@@ -29,15 +29,19 @@ export default class PropertyDetails extends LightningElement {
     messageContext;
 
     subscribeToMessageChannel() {
-        this.subscription = subscribe(
-            this.messageContext,
-            PROPERTY_DETAILS_CHANNEL,
-            (message) => this.handleMessage(message)
-        );
+        try {
+            this.subscription = subscribe(
+                this.messageContext,
+                PROPERTY_DETAILS_CHANNEL,
+                (message) => this.handleMessage(message)
+            );
+        } 
+        catch (error) {
+            this.error = error;
+        }
     }
 
     handleMessage(message) {
-        console.log(this.propertyId);
         this.propertyId = message.propertyId;
         this.propertyName = message.propertyName;
         this.propertyPicture = message.propertyImage;

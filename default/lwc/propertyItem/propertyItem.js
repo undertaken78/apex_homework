@@ -3,10 +3,9 @@ import { publish, MessageContext } from 'lightning/messageService';
 import PROPERTY_DETAILS_CHANNEL from '@salesforce/messageChannel/Property_Details__c'
 
 export default class PropertyItem extends LightningElement {
-    /**Компонент, который отображает картинку (создать картинки для всех записей Property),
-     *  а также минимальную информацию, например, имя и стоимость продажи (отображать валюту). */
+    @api propertyObject;
 
-    @api propertyObject; // _property
+    error;
     nameOfProperty;
     costOfProperty;
     pictureOfProperty;
@@ -26,11 +25,17 @@ export default class PropertyItem extends LightningElement {
     messageContext; 
 
     handlePropertyClick(event) {
-        const payload = { 
-            propertyId: this.propertyObject.Id,
-            propertyName: this.nameOfProperty,
-            propertyImage: this.pictureOfProperty,
-        };
-        publish(this.messageContext, PROPERTY_DETAILS_CHANNEL, payload);
+        try {
+            const payload = { 
+                propertyId: this.propertyObject.Id,
+                propertyName: this.nameOfProperty,
+                propertyImage: this.pictureOfProperty,
+            };
+            publish(this.messageContext, PROPERTY_DETAILS_CHANNEL, payload);
+        } 
+        catch (error) {
+            this.error = error;
+        }
+        
     }
 }
