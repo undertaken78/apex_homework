@@ -1,5 +1,13 @@
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
+import CONTACT_OBJECT from '@salesforce/schema/Contact';
+import CONTACT_ID from '@salesforce/schema/Contact.Id';
+import CONTACT_FIRST_NAME from '@salesforce/schema/Contact.FirstName';
+import CONTACT_LAST_NAME from '@salesforce/schema/Contact.LastName';
+import CONTACT_PHONE from '@salesforce/schema/Contact.Phone';
+import CONTACT_EMAIL from '@salesforce/schema/Contact.Email';
+import CONTACT_TOTAL_PRICE from '@salesforce/schema/Contact.Total_Property_Price__c';
+
 import PROPERTY_OBJECT from '@salesforce/schema/Property__c';
 import PROPERTY_NAME from '@salesforce/schema/Property__c.Name';
 import PROPERTY_OWNER_ID from '@salesforce/schema/Property__c.Property_Owner__r.Id';
@@ -20,6 +28,16 @@ import PROPERTY_OWNER_TOTAL_PROPERTY_PRICE_FIELD from '@salesforce/schema/Proper
 
 const PROPERTY_PAGE_FIELDS = 'Id, Name, Sold_Price__c, Picture__c';
 const PROPERTY_PAGE_SIZE = 8;
+
+const CONTACT_DETAIL_FIELDS = [
+    CONTACT_ID,
+    CONTACT_OBJECT,
+    CONTACT_FIRST_NAME,
+    CONTACT_LAST_NAME,
+    CONTACT_PHONE,
+    CONTACT_EMAIL,
+    CONTACT_TOTAL_PRICE,
+];
 
 const PROPERTY_OWNER_INFO_FIELDS = [
     PROPERTY_OWNER_ID,
@@ -124,6 +142,13 @@ export function reduceErrors(errors) {
 }
 
 export {
+    CONTACT_OBJECT,
+    CONTACT_FIRST_NAME,
+    CONTACT_LAST_NAME,
+    CONTACT_PHONE,
+    CONTACT_EMAIL,
+    CONTACT_TOTAL_PRICE,
+    CONTACT_DETAIL_FIELDS,
     PROPERTY_NAME,
     PROPERTY_OWNER_INFO_FIELDS,
     PROPERTY_OBJECT,

@@ -1,0 +1,13 @@
+<apex:page showHeader="false">
+    <apex:includeLightning/>
+    <div id = "lwccontainer"></div>
+    <script type="text/javascript">
+        const contactId = "{!$CurrentPage.parameters.id}";
+        $Lightning.use("c:contactDetailsLWC_to_VF", function(){
+            $Lightning.createComponent("c:contactDetails", {"recordId" : contactId}, "lwccontainer", 
+            function(cmp) {
+                console.log("Successfully creating!");
+            });
+        });
+    </script>
+</apex:page>
